@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard Booking — Admin Teduh Residence</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="../img/logo/favicon.png" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="../css/custom.css" />
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="admin-sidebar d-none d-lg-flex flex-column">
+  <a href="../index.html" class="brand d-flex align-items-center gap-2" target="_blank" rel="noopener">
+    <img src="../img/logo/favicon.png" alt="Teduh Residence Logo" style="height:24px;width:auto;" />
+    <span>Teduh Residence</span>
+  </a>
+  <nav class="flex-grow-1">
+    <a href="index.html" class="nav-link active"><i class="bi bi-calendar-check"></i>Booking</a>
+    <a href="kamar.html" class="nav-link"><i class="bi bi-door-open"></i>Kamar</a>
+  </nav>
+  <button id="logout-btn" class="nav-link text-start border-0 bg-transparent w-100" style="color:var(--teal-300);font-size:.9rem;padding:.6rem .75rem;cursor:pointer;">
+    <i class="bi bi-box-arrow-left me-2"></i>Keluar
+  </button>
+</aside>
+
+<!-- MAIN -->
+<main class="admin-main">
+
+  <!-- TOPBAR -->
+  <div class="admin-topbar">
+    <div>
+      <h5 class="mb-0" style="font-size:1rem;">Dashboard Booking</h5>
+      <p class="mb-0 text-ink-muted" style="font-size:.8rem;" id="admin-email-display"></p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="kamar.html" class="btn btn-outline-primary btn-sm d-none d-lg-inline-flex"><i class="bi bi-door-open me-1"></i>Kelola Kamar</a>
+      <button id="logout-mobile" class="btn btn-outline-primary btn-sm d-lg-none"><i class="bi bi-box-arrow-left"></i></button>
+    </div>
+  </div>
+
+  <div class="admin-content">
+
+    <!-- STAT CARDS -->
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-number" id="stat-total">—</div>
+          <div class="stat-label">Total Booking</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-number" id="stat-pending">—</div>
+          <div class="stat-label">Perlu Ditangani</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-number" id="stat-confirmed">—</div>
+          <div class="stat-label">Dikonfirmasi</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="stat-card">
+          <div class="stat-number" id="stat-completed">—</div>
+          <div class="stat-label">Selesai</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FILTER & SEARCH -->
+    <div class="d-flex flex-wrap gap-3 mb-4 align-items-center">
+      <div class="d-flex gap-2 flex-wrap">
+        <button class="btn btn-primary btn-sm filter-btn active" data-filter="all">Semua</button>
+        <button class="btn btn-outline-primary btn-sm filter-btn" data-filter="pending">Pending</button>
+        <button class="btn btn-outline-primary btn-sm filter-btn" data-filter="confirmed">Dikonfirmasi</button>
+        <button class="btn btn-outline-primary btn-sm filter-btn" data-filter="cancelled">Dibatalkan</button>
+        <button class="btn btn-outline-primary btn-sm filter-btn" data-filter="completed">Selesai</button>
+      </div>
+      <div class="ms-auto" style="min-width:220px;">
+        <input type="search" class="form-control form-control-sm" id="search-input" placeholder="Cari nama tamu..." style="min-height:36px;" />
+      </div>
+    </div>
+
+    <!-- TABEL BOOKING -->
+    <div class="admin-table">
+      <div class="table-responsive">
+        <table class="table mb-0" style="font-size:.9rem;">
+          <thead>
+            <tr>
+              <th>Tamu</th>
+              <th>Kamar</th>
+              <th>Check-in</th>
+              <th>Check-out</th>
+              <th>Tamu</th>
+              <th>Status</th>
+              <th>Tindakan</th>
+            </tr>
+          </thead>
+          <tbody id="bookings-body">
+            <tr>
+              <td colspan="7" class="text-center py-5 text-ink-muted">
+                <span class="spinner-border spinner-border-sm me-2"></span>Memuat data booking…
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- MODAL DETAIL -->
+    <div class="modal fade" id="detailModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:var(--cream-50);border:1px solid var(--cream-300);border-radius:var(--radius-lg);">
+          <div class="modal-header" style="border-bottom:1px solid var(--cream-300);">
+            <h5 class="modal-title" id="modal-title">Detail Booking</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body" id="modal-body"></div>
+          <div class="modal-footer" style="border-top:1px solid var(--cream-300);">
+            <div class="d-flex gap-2 flex-wrap w-100">
+              <select class="form-select form-select-sm" id="modal-status-select" style="width:auto;min-height:36px;">
+                <option value="pending">Pending</option>
+                <option value="confirmed">Dikonfirmasi</option>
+                <option value="cancelled">Dibatalkan</option>
+                <option value="completed">Selesai</option>
+              </select>
+              <button class="btn btn-primary btn-sm" id="modal-save-status">Simpan Status</button>
+              <button class="btn btn-outline-primary btn-sm ms-auto" id="modal-whatsapp-btn">
+                <i class="bi bi-whatsapp me-1"></i>Kirim WhatsApp
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /admin-content -->
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script type="module">
+  import { auth, db } from '../js/firebase.js';
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+  import { collection, query, orderBy, onSnapshot, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  // Auth guard
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = 'login.html';
+    } else {
+      document.getElementById('admin-email-display').textContent = user.email;
+      loadBookings();
+    }
+  });
+
+  // Logout
+  ['logout-btn','logout-mobile'].forEach(id => {
+    document.getElementById(id)?.addEventListener('click', () => {
+      signOut(auth).then(() => window.location.href = 'login.html');
+    });
+  });
+
+  let allBookings = [];
+  let currentFilter = 'all';
+  let currentSearch = '';
+  let currentBooking = null;
+
+  const detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+
+  // ── Format tanggal ──
+  function fmtDate(ts) {
+    if (!ts) return '—';
+    const d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleDateString('id-ID', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  // ── Badge status ──
+  function badgeHtml(status) {
+    const map = {
+      pending:   '<span class="badge-pending"><span class="pending-dot"></span>Pending</span>',
+      confirmed: '<span class="badge-confirmed">Dikonfirmasi</span>',
+      cancelled: '<span class="badge-cancelled">Dibatalkan</span>',
+      completed: '<span class="badge-completed">Selesai</span>',
+    };
+    return map[status] || status;
+  }
+
+  // ── WhatsApp pesan ──
+  const hotelName = 'Teduh Residence';
+  function waMessage(b) {
+    const messages = {
+      confirmed: `Halo ${b.guestName}, booking Anda di ${hotelName} telah dikonfirmasi. Kamar: ${b.roomName}, check-in ${fmtDate(b.checkIn)}, check-out ${fmtDate(b.checkOut)}. Sampai jumpa!`,
+      cancelled: `Halo ${b.guestName}, mohon maaf booking Anda di ${hotelName} untuk kamar ${b.roomName} tidak dapat kami proses. Silakan hubungi kami untuk pilihan lain.`,
+      completed: `Halo ${b.guestName}, terima kasih telah menginap di ${hotelName}. Kami berharap Anda nyaman dan sampai jumpa kembali.`,
+      pending:   `Halo ${b.guestName}, terima kasih telah booking di ${hotelName}. Kami sedang mengecek ketersediaan kamar ${b.roomName} dan akan segera mengabari Anda.`,
+    };
+    return encodeURIComponent(messages[b.status] || messages.pending);
+  }
+
+  // ── Render tabel ──
+  function renderTable() {
+    const tbody = document.getElementById('bookings-body');
+    let filtered = allBookings;
+
+    if (currentFilter !== 'all') {
+      filtered = filtered.filter(b => b.status === currentFilter);
+    }
+    if (currentSearch) {
+      const s = currentSearch.toLowerCase();
+      filtered = filtered.filter(b => b.guestName?.toLowerCase().includes(s));
+    }
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-5 text-ink-muted">Tidak ada data booking.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(b => `
+      <tr class="${b.status === 'pending' ? 'pending-row' : ''}">
+        <td>
+          <div style="font-weight:500;">${b.guestName}</div>
+          <div style="font-size:.8rem;color:var(--ink-muted);">${b.phone}</div>
+        </td>
+        <td>${b.roomName}</td>
+        <td>${fmtDate(b.checkIn)}</td>
+        <td>${fmtDate(b.checkOut)}</td>
+        <td>${b.guests}</td>
+        <td>${badgeHtml(b.status)}</td>
+        <td>
+          <div class="d-flex gap-1">
+            <button class="btn btn-outline-primary btn-sm" onclick="openDetail('${b.id}')">Detail</button>
+            <a href="https://wa.me/${b.phone}?text=${waMessage(b)}" target="_blank" rel="noopener"
+               class="btn btn-outline-primary btn-sm" title="Kirim WhatsApp">
+              <i class="bi bi-whatsapp"></i>
+            </a>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+
+    // Stats
+    document.getElementById('stat-total').textContent     = allBookings.length;
+    document.getElementById('stat-pending').textContent   = allBookings.filter(b => b.status === 'pending').length;
+    document.getElementById('stat-confirmed').textContent = allBookings.filter(b => b.status === 'confirmed').length;
+    document.getElementById('stat-completed').textContent = allBookings.filter(b => b.status === 'completed').length;
+  }
+
+  // ── Load dari Firestore ──
+  function loadBookings() {
+    const q = query(collection(db, 'bookings'), orderBy('createdAt', 'desc'));
+    onSnapshot(q, (snap) => {
+      allBookings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderTable();
+    });
+  }
+
+  // ── Filter buttons ──
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('btn-primary', 'active');
+        b.classList.add('btn-outline-primary');
+      });
+      btn.classList.add('btn-primary', 'active');
+      btn.classList.remove('btn-outline-primary');
+      currentFilter = btn.dataset.filter;
+      renderTable();
+    });
+  });
+
+  // ── Search ──
+  document.getElementById('search-input').addEventListener('input', (e) => {
+    currentSearch = e.target.value.trim();
+    renderTable();
+  });
+
+  // ── Detail modal ──
+  window.openDetail = (id) => {
+    currentBooking = allBookings.find(b => b.id === id);
+    if (!currentBooking) return;
+    const b = currentBooking;
+
+    document.getElementById('modal-title').textContent = `Booking – ${b.guestName}`;
+    document.getElementById('modal-body').innerHTML = `
+      <dl class="row mb-0" style="font-size:.9rem;">
+        <dt class="col-sm-4 text-ink-muted">Nama</dt><dd class="col-sm-8">${b.guestName}</dd>
+        <dt class="col-sm-4 text-ink-muted">WhatsApp</dt><dd class="col-sm-8"><a href="https://wa.me/${b.phone}" target="_blank">${b.phone}</a></dd>
+        <dt class="col-sm-4 text-ink-muted">Email</dt><dd class="col-sm-8">${b.email || '—'}</dd>
+        <dt class="col-sm-4 text-ink-muted">Kamar</dt><dd class="col-sm-8">${b.roomName}</dd>
+        <dt class="col-sm-4 text-ink-muted">Check-in</dt><dd class="col-sm-8">${fmtDate(b.checkIn)}</dd>
+        <dt class="col-sm-4 text-ink-muted">Check-out</dt><dd class="col-sm-8">${fmtDate(b.checkOut)}</dd>
+        <dt class="col-sm-4 text-ink-muted">Tamu</dt><dd class="col-sm-8">${b.guests} orang</dd>
+        <dt class="col-sm-4 text-ink-muted">Status</dt><dd class="col-sm-8">${badgeHtml(b.status)}</dd>
+        <dt class="col-sm-4 text-ink-muted">Catatan</dt><dd class="col-sm-8">${b.notes || '—'}</dd>
+        <dt class="col-sm-4 text-ink-muted">Dibuat</dt><dd class="col-sm-8">${fmtDate(b.createdAt)}</dd>
+      </dl>`;
+
+    document.getElementById('modal-status-select').value = b.status;
+    detailModal.show();
+  };
+
+  // ── Simpan status ──
+  document.getElementById('modal-save-status').addEventListener('click', async () => {
+    if (!currentBooking) return;
+    const newStatus = document.getElementById('modal-status-select').value;
+    try {
+      await updateDoc(doc(db, 'bookings', currentBooking.id), { status: newStatus });
+      detailModal.hide();
+    } catch (e) {
+      alert('Gagal menyimpan status. Coba lagi.');
+    }
+  });
+
+  // ── WhatsApp dari modal ──
+  document.getElementById('modal-whatsapp-btn').addEventListener('click', () => {
+    if (!currentBooking) return;
+    currentBooking.status = document.getElementById('modal-status-select').value;
+    window.open(`https://wa.me/${currentBooking.phone}?text=${waMessage(currentBooking)}`, '_blank');
+  });
+</script>
+
+</body>
+</html>

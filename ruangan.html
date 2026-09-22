@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ruangan — Teduh Residence</title>
+  <meta name="description" content="Pilih kamar yang tepat di Teduh Residence. Tersedia berbagai tipe kamar nyaman dengan harga terjangkau." />
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="img/logo/favicon.png" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+  <link rel="stylesheet" href="css/custom.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">
+      <img src="img/logo/favicon.png" alt="Teduh Residence Logo" class="brand-logo" />
+      <div class="brand-text">
+        <span class="brand-title">teduh</span>
+        <span class="brand-sub">residence</span>
+      </div>
+    </a>
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse justify-content-end">
+      <ul class="navbar-nav align-items-center gap-1 me-3">
+        <li><a class="nav-link" href="index.html">Beranda</a></li>
+        <li><a class="nav-link" href="tentang.html">Tentang</a></li>
+        <li><a class="nav-link active" href="ruangan.html">Ruangan</a></li>
+        <li><a class="nav-link" href="galeri.html">Galeri</a></li>
+        <li><a class="nav-link" href="blog.html">Blog</a></li>
+      </ul>
+      <a href="booking.html" class="btn btn-primary">Booking</a>
+    </div>
+  </div>
+</nav>
+<div class="offcanvas offcanvas-end offcanvas-nav" tabindex="-1" id="mobileMenu">
+  <div class="offcanvas-header border-bottom">
+    <span class="navbar-brand mb-0">
+      <img src="img/logo/favicon.png" alt="Teduh Residence Logo" class="brand-logo" />
+      <div class="brand-text">
+        <span class="brand-title">teduh</span>
+        <span class="brand-sub">residence</span>
+      </div>
+    </span>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+  </div>
+  <div class="offcanvas-body d-flex flex-column pt-3"><nav class="d-flex flex-column gap-1 flex-grow-1"><a class="nav-link" href="index.html">Beranda</a><a class="nav-link" href="tentang.html">Tentang</a><a class="nav-link active" href="ruangan.html">Ruangan</a><a class="nav-link" href="galeri.html">Galeri</a><a class="nav-link" href="blog.html">Blog</a></nav><a href="booking.html" class="btn btn-primary w-100 mt-3 mb-4">Booking Sekarang</a></div>
+</div>
+
+<!-- PAGE HEADER / BANNER -->
+<section class="page-banner">
+  <div class="page-banner-decor">
+    <div class="banner-circle banner-circle-1"></div>
+    <div class="banner-circle banner-circle-2"></div>
+  </div>
+  <div class="container position-relative" style="z-index: 2;">
+    <div class="row">
+      <div class="col-lg-7 reveal">
+        <span class="eyebrow">Pilih kamar Anda</span>
+        <div class="brass-line"></div>
+        <h1 style="font-size:clamp(2rem,4.5vw,3.2rem);">Ruangan kami</h1>
+        <p class="lead mt-3">Setiap kamar dirawat dengan teliti untuk memastikan Anda beristirahat dengan nyaman. Pilih yang paling sesuai dengan kebutuhan Anda.</p>
+      </div>
+    </div>
+  </div>
+  <div class="page-banner-wave">
+    <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,32L48,42.7C96,53,192,75,288,80C384,85,480,75,576,58.7C672,43,768,21,864,21.3C960,21,1056,43,1152,53.3C1248,64,1344,64,1392,64L1440,64L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" fill="rgba(127, 181, 174, 0.22)"></path>
+      <path d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,69.3C960,85,1056,107,1152,106.7C1248,107,1344,85,1392,74.7L1440,64L1440,120L1392,120C1344,120,1248,120,1152,120C1056,120,960,120,864,120C768,120,672,120,576,120C480,120,384,120,288,120C192,120,96,120,48,120L0,120Z" fill="rgba(247, 241, 229, 0.35)"></path>
+      <path d="M0,90C320,130,420,40,720,85C1020,130,1120,50,1440,80L1440,120L0,120Z" fill="var(--cream-100)"></path>
+    </svg>
+  </div>
+</section>
+
+<!-- DAFTAR KAMAR (diisi dari Firestore via ruangan.js, fallback statis) -->
+<section class="section" style="padding-top:3rem;" id="rooms-section">
+  <div class="container">
+
+    <!-- Loading state -->
+    <div id="rooms-loading" class="text-center py-5" style="display:none;">
+      <div class="spinner-border" style="color:var(--teal-500);width:2rem;height:2rem;" role="status">
+        <span class="visually-hidden">Memuat kamar...</span>
+      </div>
+      <p class="text-ink-muted mt-3">Memuat data kamar...</p>
+    </div>
+
+    <!-- Grid kamar -->
+    <div class="row g-4" id="rooms-grid">
+
+      <!-- KAMAR DELUXE -->
+      <div class="col-md-6 col-lg-4 reveal" id="deluxe">
+        <div class="card h-100">
+          <div class="card-img-wrapper ratio-4x3">
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=700&q=80&auto=format&fit=crop" alt="Kamar Deluxe Teduh Residence" loading="lazy" />
+            <span class="price-badge">Rp 450.000 / malam</span>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h4 class="mb-1">Kamar Deluxe</h4>
+            <p class="facilities-list mb-2"><span>AC</span><span>Wi-Fi</span><span>Sarapan</span><span>TV</span></p>
+            <p class="text-ink-muted mb-3" style="font-size:.875rem;">2 tamu · 1 tempat tidur double</p>
+            <p class="text-ink-muted mb-4" style="font-size:.875rem;flex-grow:1;">Kamar dengan nuansa hangat, pencahayaan alami, dan kasur premium untuk istirahat sempurna.</p>
+            <div class="d-flex gap-2 mt-auto">
+              <a href="booking.html?room=deluxe&name=Kamar+Deluxe&price=450000" class="btn btn-primary btn-sm flex-grow-1 text-center">Booking</a>
+              <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDeluxe">Detail Fasilitas</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KAMAR SUPERIOR -->
+      <div class="col-md-6 col-lg-4 reveal" id="superior">
+        <div class="card h-100">
+          <div class="card-img-wrapper ratio-4x3">
+            <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=700&q=80&auto=format&fit=crop" alt="Kamar Superior Teduh Residence" loading="lazy" />
+            <span class="price-badge">Rp 350.000 / malam</span>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h4 class="mb-1">Kamar Superior</h4>
+            <p class="facilities-list mb-2"><span>AC</span><span>Wi-Fi</span><span>TV</span></p>
+            <p class="text-ink-muted mb-3" style="font-size:.875rem;">2 tamu · 1 tempat tidur double</p>
+            <p class="text-ink-muted mb-4" style="font-size:.875rem;flex-grow:1;">Pilihan hemat tanpa mengorbankan kenyamanan. Bersih, tenang, dan siap menyambut Anda.</p>
+            <div class="d-flex gap-2 mt-auto">
+              <a href="booking.html?room=superior&name=Kamar+Superior&price=350000" class="btn btn-primary btn-sm flex-grow-1 text-center">Booking</a>
+              <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalSuperior">Detail Fasilitas</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SUITE KELUARGA -->
+      <div class="col-md-6 col-lg-4 reveal" id="suite">
+        <div class="card h-100">
+          <div class="card-img-wrapper ratio-4x3">
+            <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=700&q=80&auto=format&fit=crop" alt="Suite Keluarga Teduh Residence" loading="lazy" />
+            <span class="price-badge">Rp 650.000 / malam</span>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h4 class="mb-1">Suite Keluarga</h4>
+            <p class="facilities-list mb-2"><span>AC</span><span>Wi-Fi</span><span>Sarapan</span><span>TV</span></p>
+            <p class="text-ink-muted mb-3" style="font-size:.875rem;">4 tamu · 2 tempat tidur</p>
+            <p class="text-ink-muted mb-4" style="font-size:.875rem;flex-grow:1;">Ruangan luas dengan dua kamar tidur untuk keluarga atau perjalanan bersama teman.</p>
+            <div class="d-flex gap-2 mt-auto">
+              <a href="booking.html?room=suite&name=Suite+Keluarga&price=650000" class="btn btn-primary btn-sm flex-grow-1 text-center">Booking</a>
+              <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalSuite">Detail Fasilitas</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KAMAR STANDAR -->
+      <div class="col-md-6 col-lg-4 reveal" id="standar">
+        <div class="card h-100">
+          <div class="card-img-wrapper ratio-4x3">
+            <img src="https://images.unsplash.com/photo-1455587734955-081b22074882?w=700&q=80&auto=format&fit=crop" alt="Kamar Standar Teduh Residence" loading="lazy" />
+            <span class="price-badge">Rp 250.000 / malam</span>
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h4 class="mb-1">Kamar Standar</h4>
+            <p class="facilities-list mb-2"><span>Kipas</span><span>Wi-Fi</span><span>TV</span></p>
+            <p class="text-ink-muted mb-3" style="font-size:.875rem;">1 tamu · 1 tempat tidur single</p>
+            <p class="text-ink-muted mb-4" style="font-size:.875rem;flex-grow:1;">Ideal untuk perjalanan solo. Sederhana, bersih, dan tenang.</p>
+            <div class="d-flex gap-2 mt-auto">
+              <a href="booking.html?room=standar&name=Kamar+Standar&price=250000" class="btn btn-primary btn-sm flex-grow-1 text-center">Booking</a>
+              <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalStandar">Detail Fasilitas</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     MODAL POP-UP DETAIL KAMAR
+════════════════════════════════════════════════ -->
+
+<!-- MODAL: KAMAR DELUXE -->
+<div class="modal fade modal-teduh" id="modalDeluxe" tabindex="-1" aria-labelledby="modalDeluxeLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow mb-1">Pilihan Populer</span>
+          <h4 class="modal-title mb-0" id="modalDeluxeLabel">Kamar Deluxe</h4>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80&auto=format&fit=crop" alt="Kamar Deluxe Teduh Residence" class="room-modal-img" />
+        
+        <h5 class="modal-section-title">Deskripsi Kamar</h5>
+        <p class="modal-desc-text">
+          Kamar Deluxe dirancang untuk Anda yang menginginkan ketenangan ekstra dengan sentuhan kemewahan hangat, pencahayaan alami yang lembut, serta kasur King premium.
+        </p>
+
+        <h5 class="modal-section-title">Spesifikasi Kamar</h5>
+        <div class="room-spec-grid">
+          <div class="room-spec-box">
+            <i class="bi bi-aspect-ratio"></i>
+            <span class="spec-label">Luas Kamar</span>
+            <span class="spec-val">28 m²</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-people"></i>
+            <span class="spec-label">Kapasitas</span>
+            <span class="spec-val">2 Tamu</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-door-closed"></i>
+            <span class="spec-label">Tipe Kasur</span>
+            <span class="spec-val">1 King Bed</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-tree"></i>
+            <span class="spec-label">Pemandangan</span>
+            <span class="spec-val">Taman Asri</span>
+          </div>
+        </div>
+
+        <h5 class="modal-section-title">Fasilitas Lengkap</h5>
+        <div class="amenity-list-grid">
+          <div class="amenity-item"><i class="bi bi-snow"></i><span>AC & Kipas Angin</span></div>
+          <div class="amenity-item"><i class="bi bi-wifi"></i><span>Wi-Fi Super Cepat</span></div>
+          <div class="amenity-item"><i class="bi bi-cup-hot"></i><span>Sarapan 2 Orang</span></div>
+          <div class="amenity-item"><i class="bi bi-tv"></i><span>Smart TV 32"</span></div>
+          <div class="amenity-item"><i class="bi bi-droplet"></i><span>K. Mandi & Air Panas</span></div>
+          <div class="amenity-item"><i class="bi bi-box-seam"></i><span>Perlengkapan Mandi</span></div>
+          <div class="amenity-item"><i class="bi bi-archive"></i><span>Lemari & Hanger</span></div>
+          <div class="amenity-item"><i class="bi bi-laptop"></i><span>Meja Kerja & Stopkontak</span></div>
+        </div>
+
+        <div class="modal-policy-card">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-info-circle-fill"></i>
+            <strong>Informasi Menginap:</strong>
+          </div>
+          <div>Check-in: Mulai 14.00 WIB &middot; Check-out: Maks. 12.00 WIB &middot; Bebas Asap Rokok</div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-between align-items-center">
+        <div>
+          <span class="text-ink-muted" style="font-size:.75rem;display:block;">Harga per malam</span>
+          <span style="font-size:1.05rem;font-weight:700;color:var(--teal-900);">Rp 450.000</span>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Tutup</button>
+          <a href="booking.html?room=deluxe&name=Kamar+Deluxe&price=450000" class="btn btn-primary btn-sm">Booking Kamar Ini</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: KAMAR SUPERIOR -->
+<div class="modal fade modal-teduh" id="modalSuperior" tabindex="-1" aria-labelledby="modalSuperiorLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow mb-1">Paling Favorit</span>
+          <h4 class="modal-title mb-0" id="modalSuperiorLabel">Kamar Superior</h4>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=900&q=80&auto=format&fit=crop" alt="Kamar Superior Teduh Residence" class="room-modal-img" />
+        
+        <h5 class="modal-section-title">Deskripsi Kamar</h5>
+        <p class="modal-desc-text">
+          Pilihan ideal yang nyaman dengan harga terjangkau. Bersih, tenang, dan tertata rapi untuk mendukung istirahat Anda setelah seharian beraktivitas.
+        </p>
+
+        <h5 class="modal-section-title">Spesifikasi Kamar</h5>
+        <div class="room-spec-grid">
+          <div class="room-spec-box">
+            <i class="bi bi-aspect-ratio"></i>
+            <span class="spec-label">Luas Kamar</span>
+            <span class="spec-val">22 m²</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-people"></i>
+            <span class="spec-label">Kapasitas</span>
+            <span class="spec-val">2 Tamu</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-door-closed"></i>
+            <span class="spec-label">Tipe Kasur</span>
+            <span class="spec-val">1 Queen Bed</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-flower1"></i>
+            <span class="spec-label">Pemandangan</span>
+            <span class="spec-val">Courtyard</span>
+          </div>
+        </div>
+
+        <h5 class="modal-section-title">Fasilitas Lengkap</h5>
+        <div class="amenity-list-grid">
+          <div class="amenity-item"><i class="bi bi-snow"></i><span>Pendingin Ruangan (AC)</span></div>
+          <div class="amenity-item"><i class="bi bi-wifi"></i><span>Wi-Fi Cepat (Gratis)</span></div>
+          <div class="amenity-item"><i class="bi bi-tv"></i><span>TV Kabel 32"</span></div>
+          <div class="amenity-item"><i class="bi bi-droplet"></i><span>K. Mandi & Air Panas</span></div>
+          <div class="amenity-item"><i class="bi bi-box-seam"></i><span>Perlengkapan Mandi</span></div>
+          <div class="amenity-item"><i class="bi bi-archive"></i><span>Lemari & Hanger</span></div>
+        </div>
+
+        <div class="modal-policy-card">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-info-circle-fill"></i>
+            <strong>Informasi Menginap:</strong>
+          </div>
+          <div>Check-in: Mulai 14.00 WIB &middot; Check-out: Maks. 12.00 WIB &middot; Bebas Asap Rokok</div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-between align-items-center">
+        <div>
+          <span class="text-ink-muted" style="font-size:.75rem;display:block;">Harga per malam</span>
+          <span style="font-size:1.05rem;font-weight:700;color:var(--teal-900);">Rp 350.000</span>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Tutup</button>
+          <a href="booking.html?room=superior&name=Kamar+Superior&price=350000" class="btn btn-primary btn-sm">Booking Kamar Ini</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: SUITE KELUARGA -->
+<div class="modal fade modal-teduh" id="modalSuite" tabindex="-1" aria-labelledby="modalSuiteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow mb-1">Ruang Luas & Nyaman</span>
+          <h4 class="modal-title mb-0" id="modalSuiteLabel">Suite Keluarga</h4>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=900&q=80&auto=format&fit=crop" alt="Suite Keluarga Teduh Residence" class="room-modal-img" />
+        
+        <h5 class="modal-section-title">Deskripsi Kamar</h5>
+        <p class="modal-desc-text">
+          Akomodasi terbaik untuk keluarga hingga 4 orang. Menghadirkan area duduk santai terpisah, 2 unit AC, serta 2 kamar mandi dalam untuk kenyamanan seluruh keluarga.
+        </p>
+
+        <h5 class="modal-section-title">Spesifikasi Kamar</h5>
+        <div class="room-spec-grid">
+          <div class="room-spec-box">
+            <i class="bi bi-aspect-ratio"></i>
+            <span class="spec-label">Luas Kamar</span>
+            <span class="spec-val">46 m²</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-people"></i>
+            <span class="spec-label">Kapasitas</span>
+            <span class="spec-val">4 Tamu</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-door-closed"></i>
+            <span class="spec-label">Tipe Kasur</span>
+            <span class="spec-val">2 Queen Beds</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-tree"></i>
+            <span class="spec-label">Pemandangan</span>
+            <span class="spec-val">Taman Depan</span>
+          </div>
+        </div>
+
+        <h5 class="modal-section-title">Fasilitas Lengkap</h5>
+        <div class="amenity-list-grid">
+          <div class="amenity-item"><i class="bi bi-snow"></i><span>2 Unit AC Independen</span></div>
+          <div class="amenity-item"><i class="bi bi-wifi"></i><span>Wi-Fi Super Cepat</span></div>
+          <div class="amenity-item"><i class="bi bi-cup-hot"></i><span>Sarapan 4 Orang</span></div>
+          <div class="amenity-item"><i class="bi bi-tv"></i><span>2 TV Kabel 32"</span></div>
+          <div class="amenity-item"><i class="bi bi-droplet"></i><span>2 K. Mandi & Air Panas</span></div>
+          <div class="amenity-item"><i class="bi bi-house-door"></i><span>Ruang Duduk / Living Area</span></div>
+          <div class="amenity-item"><i class="bi bi-archive"></i><span>Lemari Pakaian Besar</span></div>
+          <div class="amenity-item"><i class="bi bi-cup-straw"></i><span>Coffee & Tea Maker</span></div>
+        </div>
+
+        <div class="modal-policy-card">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-info-circle-fill"></i>
+            <strong>Informasi Menginap:</strong>
+          </div>
+          <div>Check-in: Mulai 14.00 WIB &middot; Check-out: Maks. 12.00 WIB &middot; Bebas Asap Rokok</div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-between align-items-center">
+        <div>
+          <span class="text-ink-muted" style="font-size:.75rem;display:block;">Harga per malam</span>
+          <span style="font-size:1.05rem;font-weight:700;color:var(--teal-900);">Rp 650.000</span>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Tutup</button>
+          <a href="booking.html?room=suite&name=Suite+Keluarga&price=650000" class="btn btn-primary btn-sm">Booking Kamar Ini</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: KAMAR STANDAR -->
+<div class="modal fade modal-teduh" id="modalStandar" tabindex="-1" aria-labelledby="modalStandarLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <span class="eyebrow mb-1">Hemat & Tenang</span>
+          <h4 class="modal-title mb-0" id="modalStandarLabel">Kamar Standar</h4>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <img src="https://images.unsplash.com/photo-1455587734955-081b22074882?w=900&q=80&auto=format&fit=crop" alt="Kamar Standar Teduh Residence" class="room-modal-img" />
+        
+        <h5 class="modal-section-title">Deskripsi Kamar</h5>
+        <p class="modal-desc-text">
+          Sangat cocok untuk pelancong solo yang membutuhkan tempat istirahat tenang, bersih, dan privat dengan harga paling hemat.
+        </p>
+
+        <h5 class="modal-section-title">Spesifikasi Kamar</h5>
+        <div class="room-spec-grid">
+          <div class="room-spec-box">
+            <i class="bi bi-aspect-ratio"></i>
+            <span class="spec-label">Luas Kamar</span>
+            <span class="spec-val">16 m²</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-person"></i>
+            <span class="spec-label">Kapasitas</span>
+            <span class="spec-val">1 Tamu</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-door-closed"></i>
+            <span class="spec-label">Tipe Kasur</span>
+            <span class="spec-val">1 Single Bed</span>
+          </div>
+          <div class="room-spec-box">
+            <i class="bi bi-brightness-high"></i>
+            <span class="spec-label">Ventilasi</span>
+            <span class="spec-val">Alami</span>
+          </div>
+        </div>
+
+        <h5 class="modal-section-title">Fasilitas Lengkap</h5>
+        <div class="amenity-list-grid">
+          <div class="amenity-item"><i class="bi bi-fan"></i><span>Kipas Angin Dinding</span></div>
+          <div class="amenity-item"><i class="bi bi-wifi"></i><span>Wi-Fi Cepat (Gratis)</span></div>
+          <div class="amenity-item"><i class="bi bi-tv"></i><span>TV 24"</span></div>
+          <div class="amenity-item"><i class="bi bi-droplet"></i><span>Kamar Mandi Bersama</span></div>
+          <div class="amenity-item"><i class="bi bi-box-seam"></i><span>Handuk & Sabun Mandi</span></div>
+          <div class="amenity-item"><i class="bi bi-shield-check"></i><span>Kebersihan Teratur</span></div>
+        </div>
+
+        <div class="modal-policy-card">
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <i class="bi bi-info-circle-fill"></i>
+            <strong>Informasi Menginap:</strong>
+          </div>
+          <div>Check-in: Mulai 14.00 WIB &middot; Check-out: Maks. 12.00 WIB &middot; Bebas Asap Rokok</div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-between align-items-center">
+        <div>
+          <span class="text-ink-muted" style="font-size:.75rem;display:block;">Harga per malam</span>
+          <span style="font-size:1.05rem;font-weight:700;color:var(--teal-900);">Rp 250.000</span>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Tutup</button>
+          <a href="booking.html?room=standar&name=Kamar+Standar&price=250000" class="btn btn-primary btn-sm">Booking Kamar Ini</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INFO BOOKING / CTA -->
+<section class="section section-dark text-center" style="padding-bottom:3.5rem;">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 text-center reveal">
+        <h2 class="mb-3">Ada pertanyaan tentang kamar?</h2>
+        <p class="lead mb-5" style="max-width:540px;margin-inline:auto;">Kami senang membantu Anda memilih kamar yang paling tepat. Hubungi kami via WhatsApp sebelum booking.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+          <a href="https://wa.me/6281200000000" target="_blank" class="btn btn-outline-cream btn-lg">
+            <i class="bi bi-whatsapp me-2"></i>Tanya via WhatsApp
+          </a>
+          <a href="booking.html" class="btn btn-cream btn-lg">Booking Langsung</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GELOMBANG CREAM-PUTIH PEMISAH CTA & FOOTER -->
+<div class="cta-footer-wave">
+  <svg viewBox="0 0 1440 90" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+    <path d="M0,35 C320,75 540,10 800,45 C1060,80 1280,20 1440,48 L1440,78 C1280,50 1060,105 800,72 C540,38 320,100 0,62 Z" fill="rgba(247, 241, 229, 0.4)"></path>
+    <path d="M0,45 C260,15 520,70 780,30 C1040,-10 1260,55 1440,25 L1440,48 C1260,78 1040,15 780,52 C520,92 260,38 0,68 Z" fill="rgba(127, 181, 174, 0.35)"></path>
+    <path d="M0,42 C300,82 600,18 900,52 C1150,78 1320,28 1440,40 L1440,54 C1320,42 1150,92 900,66 C600,32 300,95 0,55 Z" fill="#FBF8F1"></path>
+  </svg>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-5">
+      <div class="col-lg-4">
+        <a href="index.html" class="footer-brand">
+          <img src="img/logo/favicon.png" alt="Teduh Residence Logo" class="footer-brand-logo" />
+          <span>Teduh Residence</span>
+        </a>
+        <p>Hotel butik kecil yang merayakan ketenangan. Tempat di mana tamu merasa seperti teman, bukan nomor kamar.</p>
+      </div>
+      <div class="col-sm-6 col-lg-3"><h5>Menu</h5><div class="d-flex flex-column"><a href="index.html">Beranda</a><a href="tentang.html">Tentang</a><a href="ruangan.html">Ruangan</a><a href="galeri.html">Galeri</a><a href="blog.html">Blog</a><a href="booking.html">Booking</a></div></div>
+      <div class="col-sm-6 col-lg-4"><h5>Kontak & Jam Layanan</h5><address style="font-style:normal;" class="mb-3">Jl. Contoh No. 12, Kota Anda<br>Indonesia 00000</address><a href="https://wa.me/6281200000000" target="_blank" class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-whatsapp"></i> +62 812-0000-0000</a><p class="mb-0" style="font-size:.85rem;color:var(--teal-100);">Check-in: 14.00 · Check-out: 12.00<br>Resepsionis: 07.00 – 22.00</p></div>
+    </div>
+    <hr class="footer-divider" /><p class="footer-copyright text-center">&copy; 2026 Teduh Residence. Hak cipta dilindungi.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/ruangan.js"></script>
+</body>
+</html>
