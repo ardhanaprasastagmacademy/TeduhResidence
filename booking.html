@@ -3,13 +3,106 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Booking Kamar — Teduh Residence</title>
-  <meta name="description" content="Pesan kamar di Teduh Residence dengan mudah. Isi form booking dan kami akan konfirmasi lewat WhatsApp." />
+  
+  <!-- Primary Meta Tags (SEO / AEO / GEO) -->
+  <title>Booking Kamar Hotel — Teduh Residence Malang</title>
+  <meta name="title" content="Booking Kamar Hotel — Teduh Residence Malang" />
+  <meta name="description" content="Pesan kamar di Teduh Residence Malang secara online dengan mudah, cepat, dan terpercaya. Konfirmasi langsung via WhatsApp dengan harga transparan." />
+  <meta name="keywords" content="booking hotel malang, reservasi kamar malang, pesan kamar teduh residence, hotel murah klojen malang, boutique hotel malang reservasi" />
+  <meta name="author" content="Teduh Residence" />
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+  <link rel="canonical" href="https://teduhresidence.vercel.app/booking" />
+
+  <!-- Geolocation Meta Tags for Local AI & GEO -->
+  <meta name="geo.region" content="ID-JI" />
+  <meta name="geo.placename" content="Malang, Jawa Timur, Indonesia" />
+  <meta name="geo.position" content="-7.9797;112.6304" />
+  <meta name="ICBM" content="-7.9797, 112.6304" />
+
+  <!-- OpenGraph / Facebook Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Teduh Residence" />
+  <meta property="og:locale" content="id_ID" />
+  <meta property="og:url" content="https://teduhresidence.vercel.app/booking" />
+  <meta property="og:title" content="Booking Kamar Hotel — Teduh Residence Malang" />
+  <meta property="og:description" content="Pesan kamar di Teduh Residence Malang secara online. Pilih tipe kamar favorit dan konfirmasi instan lewat WhatsApp." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="800" />
+  <meta property="og:image:alt" content="Form Reservasi Kamar Teduh Residence Malang" />
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://teduhresidence.vercel.app/booking" />
+  <meta name="twitter:title" content="Booking Kamar Hotel — Teduh Residence Malang" />
+  <meta name="twitter:description" content="Pesan kamar di Teduh Residence Malang secara online. Pilih tipe kamar favorit dan konfirmasi instan lewat WhatsApp." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop" />
+
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="img/logo/favicon.png" />
+  <link rel="apple-touch-icon" href="img/logo/favicon.png" />
+
+  <!-- Bootstrap & Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <link rel="stylesheet" href="css/custom.css" />
+
+  <!-- JSON-LD Structured Data for AI & Search Engines -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ItemPage",
+        "@id": "https://teduhresidence.vercel.app/booking#webpage",
+        "url": "https://teduhresidence.vercel.app/booking",
+        "name": "Reservasi Kamar — Teduh Residence Malang",
+        "description": "Halaman pemesanan kamar hotel butik Teduh Residence di Klojen, Kota Malang dengan konfirmasi via WhatsApp.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "@id": "https://teduhresidence.vercel.app/#website"
+        },
+        "potentialAction": {
+          "@type": "ReserveAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://teduhresidence.vercel.app/booking",
+            "actionPlatform": [
+              "http://schema.org/DesktopWebPlatform",
+              "http://schema.org/MobileWebPlatform"
+            ]
+          },
+          "result": {
+            "@type": "LodgingReservation",
+            "provider": {
+              "@type": "Hotel",
+              "@id": "https://teduhresidence.vercel.app/#hotel",
+              "name": "Teduh Residence"
+            }
+          }
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://teduhresidence.vercel.app/booking#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Beranda",
+            "item": "https://teduhresidence.vercel.app/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Booking Kamar",
+            "item": "https://teduhresidence.vercel.app/booking"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
 
@@ -24,7 +117,7 @@
       </div>
     </a>
     <button class="navbar-toggler border-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu"><span class="navbar-toggler-icon"></span></button>
-    <div class="collapse navbar-collapse justify-content-end">
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
       <ul class="navbar-nav align-items-center gap-1 me-3">
         <li><a class="nav-link" href="index.html">Beranda</a></li>
         <li><a class="nav-link" href="tentang.html">Tentang</a></li>
@@ -49,7 +142,6 @@
   </div>
   <div class="offcanvas-body d-flex flex-column pt-3"><nav class="d-flex flex-column gap-1 flex-grow-1"><a class="nav-link" href="index.html">Beranda</a><a class="nav-link" href="tentang.html">Tentang</a><a class="nav-link" href="ruangan.html">Ruangan</a><a class="nav-link" href="galeri.html">Galeri</a><a class="nav-link" href="blog.html">Blog</a></nav><a href="booking.html" class="btn btn-primary w-100 mt-3 mb-4">Booking Sekarang</a></div>
 </div>
-
 
 <!-- PAGE HEADER / BANNER -->
 <section class="page-banner">
@@ -236,12 +328,12 @@
           <img src="img/logo/favicon.png" alt="Teduh Residence Logo" class="footer-brand-logo" />
           <span>Teduh Residence</span>
         </a>
-        <p>Hotel butik kecil yang merayakan ketenangan. Tempat di mana tamu merasa seperti teman, bukan nomor kamar.</p>
+        <p>Hotel butik kecil di Malang yang merayakan ketenangan. Tempat di mana tamu merasa seperti teman, bukan nomor kamar.</p>
       </div>
       <div class="col-sm-6 col-lg-3"><h5>Menu</h5><div class="d-flex flex-column"><a href="index.html">Beranda</a><a href="tentang.html">Tentang</a><a href="ruangan.html">Ruangan</a><a href="galeri.html">Galeri</a><a href="blog.html">Blog</a><a href="booking.html">Booking</a></div></div>
-      <div class="col-sm-6 col-lg-4"><h5>Kontak</h5><address style="font-style:normal;" class="mb-3">Jl. Contoh No. 12, Kota Anda</address><a href="https://wa.me/6281200000000" target="_blank" class="d-flex align-items-center gap-2"><i class="bi bi-whatsapp"></i> +62 812-0000-0000</a></div>
+      <div class="col-sm-6 col-lg-4"><h5>Kontak & Jam Layanan</h5><address style="font-style:normal;" class="mb-3">Jl. Cendrawasih No. 18, Klojen<br>Kota Malang, Jawa Timur 65111, Indonesia</address><a href="https://wa.me/6281200000000" target="_blank" class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-whatsapp"></i> +62 812-0000-0000</a><p class="mb-0" style="font-size:.85rem;color:var(--teal-100);">Check-in: 14.00 · Check-out: 12.00<br>Resepsionis: 07.00 – 22.00</p></div>
     </div>
-    <hr class="footer-divider" /><p class="footer-copyright text-center">&copy; 2026 Teduh Residence.</p>
+    <hr class="footer-divider" /><p class="footer-copyright text-center">&copy; 2026 Teduh Residence. Hak cipta dilindungi.</p>
   </div>
 </footer>
 

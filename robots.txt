@@ -1,0 +1,65 @@
+# ============================================================
+# Robots.txt — Teduh Residence
+# Optimasi untuk Search Engine, Answer Engines (AEO), dan Generative AI Search (GEO)
+# ============================================================
+
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /admin/*
+
+# ── Mesin Pencari Utama (SEO) ──
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Yandex
+Allow: /
+
+# ── Generative AI & Answer Engines (GEO & AEO) ──
+# OpenAI (ChatGPT / SearchGPT)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# Perplexity AI (PerplexityBot)
+User-agent: PerplexityBot
+Allow: /
+
+# Anthropic (Claude / Claude-Web)
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# Google AI & Gemini Overviews
+User-agent: Google-Extended
+Allow: /
+
+# Apple Intelligence
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Amazon AI
+User-agent: Amazonbot
+Allow: /
+
+# ── Sitemap URL ──
+Sitemap: https://teduhresidence.vercel.app/sitemap.xml

@@ -75,13 +75,17 @@
     el.style.transitionDelay = `${(i % 3) * 80}ms`;
   });
 
-  /* ── 5. Active nav link berdasarkan halaman aktif ── */
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  /* ── 5. Active nav link berdasarkan halaman aktif (Clean URLs & Standard) ── */
+  const cleanPath = (window.location.pathname.split('/').pop() || 'index').replace(/\.html$/, '');
   document.querySelectorAll('.nav-link').forEach(link => {
-    const href = link.getAttribute('href');
-    if (href === currentPage) {
+    const rawHref = link.getAttribute('href') || '';
+    const cleanHref = (rawHref.split('/').pop() || 'index').replace(/\.html$/, '');
+    
+    // Cocokkan halaman (termasuk index atau '/')
+    const isIndex = (cleanPath === 'index' || cleanPath === '') && (cleanHref === 'index' || cleanHref === '' || rawHref === '/' || rawHref === 'index.html');
+    if (isIndex || (cleanHref === cleanPath && cleanHref !== 'index')) {
       link.classList.add('active');
-    } else if (href !== currentPage) {
+    } else {
       link.classList.remove('active');
     }
   });

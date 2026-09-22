@@ -4,18 +4,254 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Teduh Residence — Tempat Singgah yang Tenang</title>
-  <meta name="description"
-    content="Teduh Residence adalah boutique hotel dengan kamar yang bersih, tenang, dan sarapan yang enak. Nikmati pengalaman menginap yang hangat dan personal." />
+  
+  <!-- Primary SEO Meta Tags -->
+  <title>Teduh Residence — Boutique Hotel & Penginapan Tenang di Malang</title>
+  <meta name="title" content="Teduh Residence — Boutique Hotel & Penginapan Tenang di Malang" />
+  <meta name="description" content="Teduh Residence adalah boutique hotel di Malang dengan kamar bersih, suasana tenang sejuk, sarapan lezat, dan keramahan personal. Booking kamar online mudah dan cepat." />
+  <meta name="keywords" content="Teduh Residence, boutique hotel malang, hotel butik malang, penginapan tenang malang, hotel klojen malang, sewa kamar hotel murah malang, booking hotel malang, kamar deluxe malang, suite keluarga malang" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="author" content="Teduh Residence" />
+  <meta name="publisher" content="Teduh Residence" />
+  <meta name="theme-color" content="#1F6F6B" />
+  <meta name="format-detection" content="telephone=no" />
+  
+  <!-- Canonical URL (Clean URLs) -->
+  <link rel="canonical" href="https://teduhresidence.vercel.app/" />
+  
+  <!-- Geolocation Meta Tags (Local SEO & GEO Malang) -->
+  <meta name="geo.region" content="ID-JI" />
+  <meta name="geo.placename" content="Malang, Jawa Timur, Indonesia" />
+  <meta name="geo.position" content="-7.9797;112.6304" />
+  <meta name="ICBM" content="-7.9797, 112.6304" />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://teduhresidence.vercel.app/" />
+  <meta property="og:title" content="Teduh Residence — Boutique Hotel & Penginapan Tenang di Malang" />
+  <meta property="og:description" content="Kamar bersih, tenang, dan sarapan yang enak. Nikmati pengalaman menginap hangat dan personal di Teduh Residence Malang." />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Kamar Boutique Hotel Teduh Residence yang Tenang dan Hangat" />
+  <meta property="og:site_name" content="Teduh Residence" />
+  <meta property="og:locale" content="id_ID" />
+
+  <!-- Twitter / X Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://teduhresidence.vercel.app/" />
+  <meta name="twitter:title" content="Teduh Residence — Boutique Hotel & Penginapan Tenang di Malang" />
+  <meta name="twitter:description" content="Tempat singgah yang tenang di kota Malang yang sejuk. Kamar ber-AC, Wi-Fi super cepat, sarapan lezat, dan parkir gratis." />
+  <meta name="twitter:image" content="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop" />
+  <meta name="twitter:image:alt" content="Teduh Residence Malang" />
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="img/logo/favicon.png" />
+  
+  <!-- Preconnect Fonts & CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="preconnect" href="https://images.unsplash.com" />
+
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
   <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
   <!-- Custom -->
   <link rel="stylesheet" href="css/custom.css" />
+
+  <!-- ============================================================
+       JSON-LD STRUCTURED DATA (SEO, AEO, & GEO Optimization)
+       Schema: Hotel, WebSite, & FAQPage
+       ============================================================ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": ["Hotel", "LodgingBusiness", "BedAndBreakfast"],
+        "@id": "https://teduhresidence.vercel.app/#hotel",
+        "name": "Teduh Residence",
+        "legalName": "Teduh Residence Boutique Hotel",
+        "url": "https://teduhresidence.vercel.app/",
+        "logo": "https://teduhresidence.vercel.app/img/logo/favicon.png",
+        "image": [
+          "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1600&q=80&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop",
+          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&q=80&auto=format&fit=crop"
+        ],
+        "description": "Teduh Residence adalah hotel butik (boutique hotel) di Kota Malang, Jawa Timur yang mengutamakan suasana tenang, kamar bersih, sarapan lezat, dan pelayanan yang personal dan ramah.",
+        "telephone": "+6281200000000",
+        "email": "info@teduhresidence.com",
+        "priceRange": "Rp 250.000 - Rp 650.000",
+        "currenciesAccepted": "IDR",
+        "paymentAccepted": "Cash, Bank Transfer, QRIS, WhatsApp Booking",
+        "checkinTime": "14:00",
+        "checkoutTime": "12:00",
+        "starRating": {
+          "@type": "Rating",
+          "ratingValue": "4"
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "reviewCount": "240",
+          "bestRating": "5",
+          "worstRating": "1"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Jl. Cendrawasih No. 18, Klojen",
+          "addressLocality": "Kota Malang",
+          "addressRegion": "Jawa Timur",
+          "postalCode": "65111",
+          "addressCountry": "ID"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": -7.9797,
+          "longitude": 112.6304
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "opens": "00:00",
+            "closes": "23:59"
+          }
+        ],
+        "amenityFeature": [
+          { "@type": "LocationFeatureSpecification", "name": "Wi-Fi Super Cepat Gratis", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "Sarapan Pagi Enak", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "Pendingin Ruangan (AC)", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "Kamar Mandi Dalam & Air Panas 24 Jam", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "Smart TV / TV Kabel", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "Area Parkir Luas & Gratis", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "Keamanan & CCTV 24 Jam", "value": true },
+          { "@type": "LocationFeatureSpecification", "name": "Layanan Pelanggan WhatsApp", "value": true }
+        ],
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Daftar Kamar Teduh Residence",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "HotelRoom",
+                "name": "Kamar Deluxe",
+                "description": "Kamar Deluxe bernuansa hangat dengan pencahayaan alami, kasur King premium, AC, Wi-Fi cepat, dan sarapan pagi untuk 2 orang.",
+                "bed": { "@type": "BedDetails", "numberOfBeds": 1, "typeOfBed": "King Bed" },
+                "occupancy": { "@type": "QuantitativeValue", "value": 2, "unitCode": "C62" }
+              },
+              "price": "450000",
+              "priceCurrency": "IDR",
+              "availability": "https://schema.org/InStock",
+              "url": "https://teduhresidence.vercel.app/booking?room=deluxe"
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "HotelRoom",
+                "name": "Kamar Superior",
+                "description": "Kamar Superior yang nyaman dan hemat dengan kasur Queen, AC, Wi-Fi gratis, dan TV kabel untuk 2 tamu.",
+                "bed": { "@type": "BedDetails", "numberOfBeds": 1, "typeOfBed": "Queen Bed" },
+                "occupancy": { "@type": "QuantitativeValue", "value": 2, "unitCode": "C62" }
+              },
+              "price": "350000",
+              "priceCurrency": "IDR",
+              "availability": "https://schema.org/InStock",
+              "url": "https://teduhresidence.vercel.app/booking?room=superior"
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "HotelRoom",
+                "name": "Suite Keluarga",
+                "description": "Suite keluarga luas dengan area duduk santai terpisah, 2 unit AC, 2 kamar mandi dalam, dan sarapan untuk 4 orang.",
+                "bed": { "@type": "BedDetails", "numberOfBeds": 2, "typeOfBed": "2 Queen Beds" },
+                "occupancy": { "@type": "QuantitativeValue", "value": 4, "unitCode": "C62" }
+              },
+              "price": "650000",
+              "priceCurrency": "IDR",
+              "availability": "https://schema.org/InStock",
+              "url": "https://teduhresidence.vercel.app/booking?room=suite"
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "HotelRoom",
+                "name": "Kamar Standar",
+                "description": "Kamar bersih dan tenang untuk 1 orang (solo traveler) dengan Wi-Fi dan tempat tidur single nyaman.",
+                "bed": { "@type": "BedDetails", "numberOfBeds": 1, "typeOfBed": "Single Bed" },
+                "occupancy": { "@type": "QuantitativeValue", "value": 1, "unitCode": "C62" }
+              },
+              "price": "250000",
+              "priceCurrency": "IDR",
+              "availability": "https://schema.org/InStock",
+              "url": "https://teduhresidence.vercel.app/booking?room=standar"
+            }
+          ]
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://teduhresidence.vercel.app/#website",
+        "url": "https://teduhresidence.vercel.app/",
+        "name": "Teduh Residence",
+        "description": "Website Resmi Hotel Teduh Residence Malang",
+        "publisher": { "@id": "https://teduhresidence.vercel.app/#hotel" },
+        "inLanguage": "id-ID"
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://teduhresidence.vercel.app/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Berapa harga kamar per malam di Teduh Residence Malang?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Harga kamar di Teduh Residence mulai dari Rp 250.000/malam (Kamar Standar), Rp 350.000/malam (Kamar Superior), Rp 450.000/malam (Kamar Deluxe), hingga Rp 650.000/malam (Suite Keluarga kapasitas 4 orang)."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Kapan waktu check-in dan check-out di Teduh Residence?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Waktu check-in dimulai dari pukul 14.00 WIB dan waktu check-out maksimal pukul 12.00 WIB. Resepsionis kami standby membantu Anda setiap hari."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Apakah tersedia sarapan pagi dan Wi-Fi gratis?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ya, seluruh area hotel dilengkapi dengan koneksi Wi-Fi berkecepatan tinggi gratis. Sarapan pagi disajikan setiap hari antara pukul 07.00 - 10.00 WIB untuk tipe kamar tertentu."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Bagaimana cara memesan / booking kamar di Teduh Residence?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Booking kamar di Teduh Residence sangat praktis tanpa perlu membuat akun atau login. Cukup buka halaman Booking di website, isi data diri serta tanggal menginap, dan staf kami akan langsung mengirim konfirmasi ketersediaan via WhatsApp."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Apakah ada area parkir kendaraan untuk tamu?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Ya, Teduh Residence menyediakan area parkir gratis dan aman dengan pengawasan CCTV 24 jam untuk kendaraan mobil dan motor tamu."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
@@ -102,10 +338,10 @@
             Kami menyambut setiap tamu seperti teman lama.
           </p>
           <div class="d-flex flex-wrap gap-3">
-            <a href="booking.html" class="btn btn-cream btn-lg" id="hero-booking-btn">
+            <a href="/booking" class="btn btn-cream btn-lg" id="hero-booking-btn">
               Booking Sekarang
             </a>
-            <a href="ruangan.html" class="btn btn-outline-cream btn-lg">
+            <a href="/ruangan" class="btn btn-outline-cream btn-lg">
               Lihat Kamar
             </a>
           </div>
@@ -138,7 +374,7 @@
           <span class="eyebrow">Pilih kamar Anda</span>
           <h2>Ruangan kami</h2>
         </div>
-        <a href="ruangan.html" class="btn btn-outline-primary btn-sm">
+        <a href="/ruangan" class="btn btn-outline-primary btn-sm">
           Lihat Semua Kamar
         </a>
       </div>
@@ -149,7 +385,7 @@
           <div class="card h-100">
             <div class="card-img-wrapper ratio-4x3">
               <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80&auto=format&fit=crop"
-                alt="Kamar Deluxe" loading="lazy" />
+                alt="Kamar Deluxe Teduh Residence" loading="lazy" />
               <span class="price-badge">Rp 450.000 / malam</span>
             </div>
             <div class="card-body">
@@ -170,7 +406,7 @@
           <div class="card h-100">
             <div class="card-img-wrapper ratio-4x3">
               <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80&auto=format&fit=crop"
-                alt="Kamar Superior" loading="lazy" />
+                alt="Kamar Superior Teduh Residence" loading="lazy" />
               <span class="price-badge">Rp 350.000 / malam</span>
             </div>
             <div class="card-body">
@@ -191,7 +427,7 @@
           <div class="card h-100">
             <div class="card-img-wrapper ratio-4x3">
               <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80&auto=format&fit=crop"
-                alt="Suite Keluarga" loading="lazy" />
+                alt="Suite Keluarga Teduh Residence" loading="lazy" />
               <span class="price-badge">Rp 650.000 / malam</span>
             </div>
             <div class="card-body">
@@ -240,7 +476,7 @@
           <div class="brass-line"></div>
           <h2 class="mb-4">Hotel kecil dengan<br>keramahan yang <span style="color:var(--teal-700);">besar</span></h2>
           <p class="lead mb-4">
-            Teduh Residence bukan sekadar tempat tidur. Kami adalah sudut tenang di tengah kota yang bergerak cepat — tempat
+            Teduh Residence bukan sekadar tempat tidur. Kami adalah sudut tenang di tengah kota Malang yang sejuk — tempat
             di mana tamu disambut dengan hangat, bukan sekadar check-in.
           </p>
           <p class="text-ink-muted mb-5">
@@ -366,11 +602,101 @@
 
 
   <!-- ════════════════════════════════════════════════
+     FAQ (Pertanyaan yang Sering Diajukan) — AEO & GEO
+════════════════════════════════════════════════ -->
+  <section class="section" id="faq" itemscope itemtype="https://schema.org/FAQPage">
+    <div class="container">
+      <div class="row justify-content-center mb-5">
+        <div class="col-lg-8 text-center reveal">
+          <span class="eyebrow">Pusat Informasi &amp; Bantuan</span>
+          <div class="brass-line mx-auto"></div>
+          <h2>Pertanyaan yang Sering Diajukan</h2>
+          <p class="text-ink-muted mt-2">Segala informasi penting seputar reservasi, kamar, dan fasilitas di Teduh Residence Malang.</p>
+        </div>
+      </div>
+
+      <div class="row justify-content-center">
+        <div class="col-lg-9">
+          <div class="accordion faq-accordion reveal" id="faqAccordion">
+
+            <div class="accordion-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+              <h3 class="accordion-header" id="faqHeading1">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1" aria-expanded="true" aria-controls="faqCollapse1" itemprop="name">
+                  Berapa harga kamar per malam di Teduh Residence Malang?
+                </button>
+              </h3>
+              <div id="faqCollapse1" class="accordion-collapse collapse show" aria-labelledby="faqHeading1" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                <div class="accordion-body" itemprop="text">
+                  Harga kamar kami mulai dari <strong>Rp 250.000/malam</strong> untuk Kamar Standar (1 tamu), <strong>Rp 350.000/malam</strong> untuk Kamar Superior (2 tamu), <strong>Rp 450.000/malam</strong> untuk Kamar Deluxe (2 tamu), hingga <strong>Rp 650.000/malam</strong> untuk Suite Keluarga luas (hingga 4 orang). Semua tarif sudah termasuk fasilitas kamar lengkap dan akses Wi-Fi berkecepatan tinggi.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+              <h3 class="accordion-header" id="faqHeading2">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2" aria-expanded="false" aria-controls="faqCollapse2" itemprop="name">
+                  Kapan waktu check-in dan check-out?
+                </button>
+              </h3>
+              <div id="faqCollapse2" class="accordion-collapse collapse" aria-labelledby="faqHeading2" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                <div class="accordion-body" itemprop="text">
+                  Waktu check-in standar dimulai pukul <strong>14.00 WIB</strong> dan waktu check-out maksimal pukul <strong>12.00 WIB</strong>. Jika Anda memerlukan check-in lebih awal (early check-in) atau check-out lebih lambat, silakan hubungi resepsionis kami melalui WhatsApp untuk konfirmasi ketersediaan.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+              <h3 class="accordion-header" id="faqHeading3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3" aria-expanded="false" aria-controls="faqCollapse3" itemprop="name">
+                  Apakah tersedia sarapan pagi dan Wi-Fi gratis?
+                </button>
+              </h3>
+              <div id="faqCollapse3" class="accordion-collapse collapse" aria-labelledby="faqHeading3" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                <div class="accordion-body" itemprop="text">
+                  Ya, seluruh area dan kamar hotel terhubung dengan jaringan <strong>Wi-Fi super cepat</strong> gratis. Sarapan pagi disajikan setiap hari antara pukul <strong>07.00 – 10.00 WIB</strong> di ruang makan utama dengan hidangan lokal yang lezat dan hangat.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+              <h3 class="accordion-header" id="faqHeading4">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse4" aria-expanded="false" aria-controls="faqCollapse4" itemprop="name">
+                  Bagaimana cara melakukan booking kamar?
+                </button>
+              </h3>
+              <div id="faqCollapse4" class="accordion-collapse collapse" aria-labelledby="faqHeading4" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                <div class="accordion-body" itemprop="text">
+                  Anda dapat memesan langsung secara praktis tanpa perlu login atau membuat akun. Cukup klik tombol <strong>Booking</strong> di website, isi form dengan tanggal menginap dan tipe kamar pilihan, lalu staf kami akan segera menghubungi Anda via WhatsApp untuk konfirmasi instan.
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item" itemscope itemprop="mainEntity" itemtype="https://schema.org/Question">
+              <h3 class="accordion-header" id="faqHeading5">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse5" aria-expanded="false" aria-controls="faqCollapse5" itemprop="name">
+                  Apakah tersedia area parkir kendaraan yang aman?
+                </button>
+              </h3>
+              <div id="faqCollapse5" class="accordion-collapse collapse" aria-labelledby="faqHeading5" data-bs-parent="#faqAccordion" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
+                <div class="accordion-body" itemprop="text">
+                  Ya, kami menyediakan area parkir luas, gratis, dan aman untuk mobil maupun sepeda motor tamu, dilengkapi pengawasan kamera CCTV 24 jam.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════════════════
      BAND CTA BOOKING
 ════════════════════════════════════════════════ -->
   <section class="section section-dark text-center" id="cta-booking" style="padding-bottom:3.5rem;">
     <div class="container reveal">
-      <span class="eyebrow">Siapa menginap?</span>
+      <span class="eyebrow">Siap menginap?</span>
       <h2 class="mb-3">Pesan kamar Anda hari ini</h2>
       <p class="lead mb-5" style="max-width:520px;margin-inline:auto;color:var(--teal-100);">
         Booking cepat dan mudah — tidak perlu membuat akun. Kami akan konfirmasi lewat WhatsApp.
@@ -402,7 +728,7 @@
             <img src="img/logo/favicon.png" alt="Teduh Residence Logo" class="footer-brand-logo" />
             <span>Teduh Residence</span>
           </a>
-          <p>Hotel butik kecil yang merayakan ketenangan. Tempat di mana tamu merasa seperti teman, bukan nomor kamar.
+          <p>Hotel butik kecil di Malang yang merayakan ketenangan. Tempat di mana tamu merasa seperti teman, bukan nomor kamar.
           </p>
         </div>
 
@@ -421,14 +747,12 @@
         <div class="col-sm-6 col-lg-4">
           <h5>Kontak &amp; Jam Layanan</h5>
           <address class="mb-3" style="font-style:normal;">
-            <!-- TODO: Isi alamat hotel yang sebenarnya -->
-            Jl. Contoh No. 12, Kota Anda<br>
-            Indonesia 00000
+            Jl. Cendrawasih No. 18, Klojen<br>
+            Kota Malang, Jawa Timur 65111, Indonesia
           </address>
           <a href="https://wa.me/6281200000000" target="_blank" rel="noopener"
             class="d-flex align-items-center gap-2 mb-2">
             <i class="bi bi-whatsapp"></i>
-            <!-- TODO: Ganti nomor WhatsApp admin -->
             +62 812-0000-0000
           </a>
           <p class="mb-0" style="font-size:.85rem;color:var(--teal-100);">

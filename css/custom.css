@@ -1951,6 +1951,46 @@ p { margin-bottom: 1rem; }
   }
 }
 
+/* ── 19b. FAQ Accordion (AEO & GEO Optimization) ─────────────── */
+.faq-accordion .accordion-item {
+  background: var(--cream-50);
+  border: 1px solid var(--cream-300);
+  border-radius: var(--radius-md) !important;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(14, 59, 58, 0.05);
+  transition: border-color .25s ease, box-shadow .25s ease;
+}
+.faq-accordion .accordion-item:hover {
+  border-color: var(--teal-300);
+}
+.faq-accordion .accordion-button {
+  background: var(--cream-50);
+  color: var(--teal-900);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.05rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: none;
+  border-radius: 0;
+}
+.faq-accordion .accordion-button:not(.collapsed) {
+  background: var(--teal-50);
+  color: var(--teal-700);
+  box-shadow: none;
+}
+.faq-accordion .accordion-button:focus {
+  box-shadow: 0 0 0 3px rgba(46, 139, 133, 0.25);
+}
+.faq-accordion .accordion-body {
+  background: var(--cream-50);
+  color: var(--ink-muted);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  padding: 1.25rem 1.5rem 1.5rem;
+  border-top: 1px solid var(--cream-200);
+}
+
 /* ── 20. Preferensi Gerak ───────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
