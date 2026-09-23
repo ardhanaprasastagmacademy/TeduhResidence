@@ -185,7 +185,20 @@
 
     <!-- Pesan error (tersembunyi) -->
     <div class="alert mb-4 d-none" id="error-message" role="alert" style="background:var(--cream-50);border:none;border-left:3px solid #9A3B30;border-radius:var(--radius-md);color:#9A3B30;padding:1.25rem 1.5rem;">
-      <p class="mb-0">Booking belum terkirim. Coba lagi sebentar ya.</p>
+      <p class="mb-0" id="error-message-text">Booking belum terkirim. Coba lagi sebentar ya.</p>
+    </div>
+
+    <!-- Peringatan Kamar Penuh (tersembunyi) -->
+    <div class="alert mb-4 d-none" id="room-full-alert" role="alert" style="background:#FFF3CD;border:none;border-left:4px solid #FFC107;border-radius:var(--radius-md);color:#664D03;padding:1.25rem 1.5rem;">
+      <div class="d-flex align-items-start gap-3">
+        <i class="bi bi-exclamation-triangle-fill fs-5 text-warning flex-shrink-0 mt-1"></i>
+        <div>
+          <h6 class="fw-bold mb-1">Kamar Sudah Penuh</h6>
+          <p class="mb-0" style="font-size:0.9rem;" id="room-full-alert-text">
+            Kamar yang Anda tuju sudah mencapai batas maksimal (3 booking telah dikonfirmasi). Silakan pilih kamar lain di bawah ini.
+          </p>
+        </div>
+      </div>
     </div>
 
     <div class="row g-5">
@@ -220,11 +233,7 @@
           <div class="mb-4">
             <label for="roomType" class="form-label">Tipe Kamar <span style="color:#9A3B30;">*</span></label>
             <select class="form-select" id="roomType" name="roomType" required>
-              <option value="" disabled selected>Pilih tipe kamar</option>
-              <option value="Kamar Deluxe">Kamar Deluxe — Rp 450.000/malam</option>
-              <option value="Kamar Superior">Kamar Superior — Rp 350.000/malam</option>
-              <option value="Suite Keluarga">Suite Keluarga — Rp 650.000/malam</option>
-              <option value="Kamar Standar">Kamar Standar — Rp 250.000/malam</option>
+              <option value="" disabled selected>Memuat daftar kamar dari sistem...</option>
             </select>
             <div class="invalid-feedback">Pilih tipe kamar.</div>
           </div>

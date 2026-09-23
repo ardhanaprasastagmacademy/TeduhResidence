@@ -1009,6 +1009,82 @@
 ════════════════════════════════════════════════ -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="js/main.js"></script>
+  <script type="module">
+    import { db } from './js/firebase.js';
+    import { collection, query, onSnapshot, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const featuredContainer = document.getElementById('featured-rooms');
+    if (featuredContainer) {
+      try {
+        let rooms = [];
+        let confirmedBookings = [];
+
+        function renderFeatured() {
+          if (rooms.length === 0) return;
+          const displayRooms = rooms.slice(0, 3);
+          featuredContainer.innerHTML = displayRooms.map(r => {
+            const maxLimit = parseInt(r.maxBookings) || 3;
+            const confirmedCount = confirmedBookings.filter(b => 
+              (b.roomId && b.roomId === r.id) || 
+              (b.roomName && b.roomName.toLowerCase() === r.name.toLowerCase())
+            ).length;
+            const isQuotaFull = confirmedCount >= maxLimit || r.isAvailable === false;
+
+            return `
+              <div class="col-md-6 col-lg-4 reveal">
+                <div class="card h-100 shadow-sm">
+                  <div class="card-img-wrapper ratio-4x3 position-relative">
+                    <img src="${(r.images && r.images[0]) || 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600'}"
+                      alt="${r.name} Teduh Residence" loading="lazy" />
+                    <span class="price-badge">Rp ${Number(r.pricePerNight || 0).toLocaleString('id-ID')} / malam</span>
+                    ${isQuotaFull ? `
+                      <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1 shadow-sm" style="font-size:0.75rem;">
+                        Penuh (${confirmedCount}/${maxLimit})
+                      </span>` : ''}
+                  </div>
+                  <div class="card-body d-flex flex-column">
+                    <h4 class="mb-1">${r.name}</h4>
+                    <p class="facilities-list mb-2">
+                      ${(Array.isArray(r.facilities) && r.facilities.length > 0) ? r.facilities.slice(0, 3).map(f => `<span>${f}</span>`).join('') : '<span>AC</span><span>Wi-Fi</span>'}
+                    </p>
+                    <p class="text-ink-muted mb-3" style="font-size:.875rem;">Maks. ${r.capacity || 2} tamu · ${isQuotaFull ? '<span class="text-danger fw-semibold">Penuh</span>' : `<span class="text-success">${confirmedCount}/${maxLimit} Terisi</span>`}</p>
+                    <div class="d-flex gap-2 mt-auto">
+                      ${isQuotaFull ? `
+                        <button class="btn btn-outline-primary btn-sm flex-grow-1" disabled style="opacity:0.65;">Penuh</button>
+                      ` : `
+                        <a href="booking.html?id=${r.id}&name=${encodeURIComponent(r.name)}&price=${r.pricePerNight}" class="btn btn-primary btn-sm flex-grow-1 text-center">Booking</a>
+                      `}
+                      <a href="ruangan.html" class="btn btn-outline-primary btn-sm">Detail</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+
+          document.querySelectorAll('#featured-rooms .reveal:not(.revealed)').forEach((el, i) => {
+            el.style.transitionDelay = `${(i % 3) * 80}ms`;
+            setTimeout(() => el.classList.add('revealed'), 50);
+          });
+        }
+
+        const qRooms = query(collection(db, 'rooms'), orderBy('name'));
+        onSnapshot(qRooms, (snap) => {
+          rooms = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+          renderFeatured();
+        });
+
+        const qBookings = query(collection(db, 'bookings'));
+        onSnapshot(qBookings, (snap) => {
+          confirmedBookings = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(b => b.status === 'confirmed');
+          renderFeatured();
+        });
+
+      } catch (e) {
+        console.warn('Featured rooms sync failed:', e);
+      }
+    }
+  </script>
 
 </body>
 

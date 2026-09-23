@@ -65,13 +65,17 @@
               <label class="form-label">Nama Kamar *</label>
               <input type="text" class="form-control" id="r-name" required placeholder="Kamar Deluxe" />
             </div>
-            <div class="col-md-3">
-              <label class="form-label">Harga/Malam (Rp) *</label>
+            <div class="col-md-2">
+              <label class="form-label">Harga/Malam *</label>
               <input type="number" class="form-control" id="r-price" required min="0" placeholder="450000" />
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
               <label class="form-label">Kapasitas Tamu *</label>
               <input type="number" class="form-control" id="r-capacity" required min="1" max="10" placeholder="2" />
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Maks. Booking *</label>
+              <input type="number" class="form-control" id="r-max-bookings" required min="1" max="50" value="3" placeholder="3" title="Maksimal booking terkonfirmasi sebelum kamar ditandai penuh" />
             </div>
             <div class="col-12">
               <label class="form-label">Deskripsi</label>
@@ -81,11 +85,55 @@
               <label class="form-label">Fasilitas (pisahkan dengan koma)</label>
               <input type="text" class="form-control" id="r-facilities" placeholder="AC, Wi-Fi, Sarapan, TV" />
             </div>
+
+            <!-- UPLOAD FOTO KAMAR -->
             <div class="col-12">
-              <label class="form-label">URL Foto (pisahkan dengan koma)</label>
-              <input type="text" class="form-control" id="r-images" placeholder="https://..." />
-              <div class="form-text" style="color:var(--ink-muted);font-size:.8rem;">Foto pertama akan ditampilkan sebagai foto utama kamar.</div>
+              <label class="form-label d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-medium">Foto Kamar</span>
+                <span class="text-ink-muted" style="font-size:0.75rem;">Bisa upload file atau masukkan link URL</span>
+              </label>
+
+              <!-- Dropzone Area -->
+              <div id="dropzone" class="upload-dropzone p-4 text-center border-dashed rounded-3" style="border: 2px dashed var(--cream-300); background: #fff; cursor: pointer; transition: all .2s ease;">
+                <input type="file" id="r-file-input" multiple accept="image/*" class="d-none" />
+                <i class="bi bi-cloud-arrow-up text-primary" style="font-size: 2.25rem;"></i>
+                <div class="mt-2 fw-semibold" style="font-size: 0.95rem;">Klik untuk pilih foto dari perangkat atau seret foto ke sini</div>
+                <div class="text-ink-muted" style="font-size: 0.8rem;">Mendukung format JPG, PNG, WEBP (bisa pilih banyak sekaligus)</div>
+              </div>
+
+              <!-- Upload Progress -->
+              <div id="upload-progress-box" class="mt-2 d-none">
+                <div class="d-flex justify-content-between align-items-center mb-1" style="font-size: 0.8rem;">
+                  <span id="upload-status-text" class="text-teal-700 fw-medium">Mengunggah foto...</span>
+                  <span id="upload-status-pct" class="text-ink-muted">0%</span>
+                </div>
+                <div class="progress" style="height: 6px;">
+                  <div id="upload-progress-bar" class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;"></div>
+                </div>
+              </div>
+
+              <!-- Manual URL Input Option -->
+              <div class="mt-2">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-text bg-white" style="border-color: var(--cream-300); font-size: 0.8rem;"><i class="bi bi-link-45deg"></i></span>
+                  <input type="url" id="r-url-input" class="form-control" placeholder="Atau tempel URL gambar eksternal (contoh: https://images.unsplash.com/...)" style="font-size: 0.85rem;" />
+                  <button class="btn btn-outline-primary" type="button" id="add-url-btn" style="font-size: 0.8rem;">+ Tambah URL</button>
+                </div>
+              </div>
+
+              <!-- Thumbnails Preview List -->
+              <div class="mt-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span style="font-size: 0.85rem; font-weight: 600;" id="preview-count-label">Galeri Foto Kamar (0)</span>
+                  <small class="text-ink-muted" style="font-size: 0.75rem;">Foto pertama = Foto Utama</small>
+                </div>
+                <div id="room-images-preview-grid" class="d-flex flex-wrap gap-2">
+                  <!-- Image thumbnail items will be injected here -->
+                </div>
+              </div>
+
             </div>
+
             <div class="col-12">
               <div class="form-check" style="padding-left:0;">
                 <input type="checkbox" class="form-check-input" id="r-available" checked style="margin-left:0;margin-right:.5rem;" />
@@ -122,11 +170,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script type="module">
-  import { auth, db } from '../js/firebase.js';
+  import { auth, db, storage } from '../js/firebase.js';
   import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
   import {
     collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, orderBy, query
   } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import {
+    ref, uploadBytesResumable, getDownloadURL
+  } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
   onAuthStateChanged(auth, (user) => {
     if (!user) window.location.href = 'login.html';
@@ -140,15 +191,32 @@
   const roomModal   = new bootstrap.Modal(document.getElementById('roomModal'));
   const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
   let allRooms = [];
+  let confirmedBookings = [];
   let deleteId = null;
+  let currentImages = []; // Array of image URLs for current modal room
 
-  // ── Load rooms ──
+  // ── Load rooms & bookings ──
   function loadRooms() {
-    const q = query(collection(db, 'rooms'), orderBy('name'));
-    onSnapshot(q, (snap) => {
+    const qRooms = query(collection(db, 'rooms'), orderBy('name'));
+    onSnapshot(qRooms, (snap) => {
       allRooms = snap.docs.map(d => ({ id: d.id, ...d.data() }));
       renderRooms();
     });
+
+    const qBookings = query(collection(db, 'bookings'));
+    onSnapshot(qBookings, (snap) => {
+      confirmedBookings = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(b => b.status === 'confirmed');
+      renderRooms();
+    });
+  }
+
+  function getConfirmedCount(room) {
+    return confirmedBookings.filter(b => 
+      (b.roomId && b.roomId === room.id) ||
+      (b.roomName && b.roomName.toLowerCase() === room.name.toLowerCase())
+    ).length;
   }
 
   // ── Render grid ──
@@ -158,22 +226,30 @@
       grid.innerHTML = `<div class="col-12 text-center py-5 text-ink-muted">Belum ada kamar. Klik "Tambah Kamar" untuk memulai.</div>`;
       return;
     }
-    grid.innerHTML = allRooms.map(r => `
+    grid.innerHTML = allRooms.map(r => {
+      const maxLimit = parseInt(r.maxBookings) || 3;
+      const confirmedCount = getConfirmedCount(r);
+      const isQuotaFull = confirmedCount >= maxLimit;
+
+      return `
       <div class="col-md-6 col-lg-4">
-        <div class="card h-100">
-          <div style="aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius-lg) var(--radius-lg) 0 0;">
+        <div class="card h-100 shadow-sm">
+          <div style="aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius-lg) var(--radius-lg) 0 0;position:relative;">
             <img src="${r.images?.[0] || 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=500'}"
                  alt="${r.name}" style="width:100%;height:100%;object-fit:cover;" loading="lazy" />
+            <span class="position-absolute top-0 start-0 m-2 badge ${isQuotaFull ? 'bg-danger' : (confirmedCount > 0 ? 'bg-warning text-dark' : 'bg-success')}" style="font-size:0.75rem;">
+              ${isQuotaFull ? `Penuh (${confirmedCount}/${maxLimit})` : `Booking: ${confirmedCount}/${maxLimit} Dikonfirmasi`}
+            </span>
           </div>
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-start mb-2">
-              <h5 class="mb-0" style="font-size:1rem;">${r.name}</h5>
-              <span class="${r.isAvailable !== false ? 'badge-confirmed' : 'badge-cancelled'}">
-                ${r.isAvailable !== false ? 'Tersedia' : 'Tidak Tersedia'}
+              <h5 class="mb-0" style="font-size:1rem;font-weight:600;">${r.name}</h5>
+              <span class="${r.isAvailable !== false && !isQuotaFull ? 'badge-confirmed' : 'badge-cancelled'}">
+                ${isQuotaFull ? 'Penuh' : (r.isAvailable !== false ? 'Tersedia' : 'Tidak Tersedia')}
               </span>
             </div>
             <p class="text-ink-muted mb-1" style="font-size:.875rem;">
-              Rp ${Number(r.pricePerNight).toLocaleString('id-ID')} / malam · ${r.capacity} tamu
+              Rp ${Number(r.pricePerNight).toLocaleString('id-ID')} / malam · Maks. ${r.capacity} tamu
             </p>
             <p class="text-ink-muted mb-3" style="font-size:.8rem;">${(r.facilities || []).join(' · ')}</p>
             <div class="d-flex gap-2">
@@ -191,15 +267,218 @@
             </div>
           </div>
         </div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
   }
+
+  // ── Render Image Previews in Modal ──
+  function renderImagePreviews() {
+    const container = document.getElementById('room-images-preview-grid');
+    const countLabel = document.getElementById('preview-count-label');
+    countLabel.textContent = `Galeri Foto Kamar (${currentImages.length})`;
+
+    if (currentImages.length === 0) {
+      container.innerHTML = `
+        <div class="w-100 text-center py-3 text-ink-muted" style="font-size: 0.825rem; background: rgba(0,0,0,0.02); border-radius: var(--radius-sm);">
+          <i class="bi bi-images me-1"></i> Belum ada foto yang dipilih. Silakan upload atau tambahkan URL.
+        </div>`;
+      return;
+    }
+
+    container.innerHTML = currentImages.map((url, idx) => `
+      <div class="position-relative rounded overflow-hidden shadow-sm" style="width: 100px; height: 75px; border: 2px solid ${idx === 0 ? 'var(--teal-500)' : 'var(--cream-300)'};">
+        <img src="${url}" alt="Foto ${idx + 1}" style="width: 100%; height: 100%; object-fit: cover;" />
+        ${idx === 0 ? '<span class="position-absolute top-0 start-0 badge bg-primary" style="font-size: 0.6rem; border-radius: 0 0 4px 0;">Utama</span>' : ''}
+        <div class="position-absolute top-0 end-0 p-1 d-flex gap-1">
+          <button type="button" class="btn btn-danger btn-sm p-0 rounded-circle d-flex align-items-center justify-content-center" style="width: 20px; height: 20px; font-size: 0.65rem;" onclick="removeImageAt(${idx})" title="Hapus foto">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        ${idx !== 0 ? `
+        <button type="button" class="btn btn-dark btn-sm position-absolute bottom-0 start-0 w-100 text-center py-0 opacity-75" style="font-size: 0.6rem; border-radius: 0;" onclick="makeMainImage(${idx})">
+          Set Utama
+        </button>` : ''}
+      </div>
+    `).join('');
+  }
+
+  window.removeImageAt = (idx) => {
+    currentImages.splice(idx, 1);
+    renderImagePreviews();
+  };
+
+  window.makeMainImage = (idx) => {
+    const item = currentImages.splice(idx, 1)[0];
+    currentImages.unshift(item);
+    renderImagePreviews();
+  };
+
+  // ── Compress Image on Client Side ──
+  async function compressImageFile(file, maxWidth = 1600, maxHeight = 1200, quality = 0.85) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > maxWidth || height > maxHeight) {
+            if (width / height > maxWidth / maxHeight) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            } else {
+              width = Math.round((width * maxHeight) / height);
+              height = maxHeight;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              if (blob) resolve(blob);
+              else resolve(file); // fallback to original file
+            },
+            'image/jpeg',
+            quality
+          );
+        };
+        img.onerror = () => resolve(file);
+        img.src = e.target.result;
+      };
+      reader.onerror = () => resolve(file);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ── Process Uploading Files ──
+  async function handleFilesUpload(files) {
+    if (!files || files.length === 0) return;
+    const progressBox = document.getElementById('upload-progress-box');
+    const progressBar = document.getElementById('upload-progress-bar');
+    const statusText  = document.getElementById('upload-status-text');
+    const statusPct   = document.getElementById('upload-status-pct');
+
+    progressBox.classList.remove('d-none');
+    const totalFiles = files.length;
+
+    for (let i = 0; i < totalFiles; i++) {
+      const file = files[i];
+      if (!file.type.startsWith('image/')) continue;
+
+      const filePercent = Math.round(((i) / totalFiles) * 100);
+      progressBar.style.width = `${filePercent}%`;
+      statusText.textContent = `Mengoptimalkan & mengunggah ${i + 1}/${totalFiles}: ${file.name}...`;
+      statusPct.textContent = `${filePercent}%`;
+
+      try {
+        // 1. Compress image client side
+        const compressedBlob = await compressImageFile(file);
+
+        // 2. Upload to Firebase Storage
+        const fileExt = file.name.split('.').pop() || 'jpg';
+        const cleanName = file.name.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 30);
+        const storagePath = `rooms/${Date.now()}_${cleanName}.${fileExt}`;
+        const fileRef = ref(storage, storagePath);
+
+        const uploadTask = uploadBytesResumable(fileRef, compressedBlob);
+
+        await new Promise((resolve, reject) => {
+          uploadTask.on(
+            'state_changed',
+            (snapshot) => {
+              const itemProgress = (snapshot.bytesTransferred / snapshot.totalBytes);
+              const overall = Math.round(((i + itemProgress) / totalFiles) * 100);
+              progressBar.style.width = `${overall}%`;
+              statusPct.textContent = `${overall}%`;
+            },
+            (error) => reject(error),
+            async () => {
+              const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+              currentImages.push(downloadUrl);
+              renderImagePreviews();
+              resolve();
+            }
+          );
+        });
+      } catch (err) {
+        console.warn('Storage upload error, fallback to compressed Data URL:', err);
+        // Fallback: Read as base64 data url so upload doesn't block the user
+        const reader = new FileReader();
+        await new Promise((resolve) => {
+          reader.onload = (e) => {
+            currentImages.push(e.target.result);
+            renderImagePreviews();
+            resolve();
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    progressBar.style.width = '100%';
+    statusPct.textContent = '100%';
+    statusText.textContent = 'Upload selesai!';
+    setTimeout(() => {
+      progressBox.classList.add('d-none');
+      progressBar.style.width = '0%';
+    }, 1200);
+  }
+
+  // Dropzone setup
+  const dropzone = document.getElementById('dropzone');
+  const fileInput = document.getElementById('r-file-input');
+
+  dropzone.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', (e) => {
+    handleFilesUpload(Array.from(e.target.files));
+    fileInput.value = '';
+  });
+
+  dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.style.background = 'var(--teal-50)';
+    dropzone.style.borderColor = 'var(--teal-500)';
+  });
+
+  ['dragleave', 'dragend'].forEach(type => {
+    dropzone.addEventListener(type, () => {
+      dropzone.style.background = '#fff';
+      dropzone.style.borderColor = 'var(--cream-300)';
+    });
+  });
+
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.style.background = '#fff';
+    dropzone.style.borderColor = 'var(--cream-300)';
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFilesUpload(Array.from(e.dataTransfer.files));
+    }
+  });
+
+  // Manual URL Add button
+  document.getElementById('add-url-btn').addEventListener('click', () => {
+    const urlInput = document.getElementById('r-url-input');
+    const val = urlInput.value.trim();
+    if (val) {
+      currentImages.push(val);
+      urlInput.value = '';
+      renderImagePreviews();
+    }
+  });
 
   // ── Tambah kamar ──
   document.getElementById('add-room-btn').addEventListener('click', () => {
     document.getElementById('room-modal-title').textContent = 'Tambah Kamar';
     document.getElementById('room-form').reset();
     document.getElementById('room-doc-id').value = '';
+    document.getElementById('r-max-bookings').value = '3';
     document.getElementById('r-available').checked = true;
+    currentImages = [];
+    renderImagePreviews();
     roomModal.show();
   });
 
@@ -208,36 +487,44 @@
     const r = allRooms.find(x => x.id === id);
     if (!r) return;
     document.getElementById('room-modal-title').textContent = 'Edit Kamar';
-    document.getElementById('room-doc-id').value   = r.id;
-    document.getElementById('r-name').value        = r.name || '';
-    document.getElementById('r-price').value       = r.pricePerNight || '';
-    document.getElementById('r-capacity').value    = r.capacity || '';
-    document.getElementById('r-desc').value        = r.description || '';
-    document.getElementById('r-facilities').value  = (r.facilities || []).join(', ');
-    document.getElementById('r-images').value      = (r.images || []).join(', ');
-    document.getElementById('r-available').checked = r.isAvailable !== false;
+    document.getElementById('room-doc-id').value      = r.id;
+    document.getElementById('r-name').value           = r.name || '';
+    document.getElementById('r-price').value          = r.pricePerNight || '';
+    document.getElementById('r-capacity').value       = r.capacity || '';
+    document.getElementById('r-max-bookings').value   = r.maxBookings || 3;
+    document.getElementById('r-desc').value           = r.description || '';
+    document.getElementById('r-facilities').value     = (r.facilities || []).join(', ');
+    document.getElementById('r-available').checked    = r.isAvailable !== false;
+    currentImages = Array.isArray(r.images) ? [...r.images] : (r.images ? [r.images] : []);
+    renderImagePreviews();
     roomModal.show();
   };
 
   // ── Simpan kamar ──
   document.getElementById('save-room-btn').addEventListener('click', async () => {
-    const id       = document.getElementById('room-doc-id').value;
-    const name     = document.getElementById('r-name').value.trim();
-    const price    = parseFloat(document.getElementById('r-price').value);
-    const capacity = parseInt(document.getElementById('r-capacity').value);
+    const id          = document.getElementById('room-doc-id').value;
+    const name        = document.getElementById('r-name').value.trim();
+    const price       = parseFloat(document.getElementById('r-price').value);
+    const capacity    = parseInt(document.getElementById('r-capacity').value);
+    const maxBookings = parseInt(document.getElementById('r-max-bookings').value) || 3;
 
     if (!name || isNaN(price) || isNaN(capacity)) {
       alert('Nama, harga, dan kapasitas wajib diisi.');
       return;
     }
 
+    const saveBtn = document.getElementById('save-room-btn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Menyimpan...';
+
     const data = {
       name,
       pricePerNight: price,
       capacity,
+      maxBookings,
       description:  document.getElementById('r-desc').value.trim(),
       facilities:   document.getElementById('r-facilities').value.split(',').map(s => s.trim()).filter(Boolean),
-      images:       document.getElementById('r-images').value.split(',').map(s => s.trim()).filter(Boolean),
+      images:       currentImages,
       isAvailable:  document.getElementById('r-available').checked,
     };
 
@@ -249,7 +536,11 @@
       }
       roomModal.hide();
     } catch (e) {
+      console.error(e);
       alert('Gagal menyimpan. Coba lagi.');
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = 'Simpan Kamar';
     }
   });
 
