@@ -1,5 +1,5 @@
 // js/ruangan.js — Teduh Residence
-// Load kamar secara dinamis dari Firestore & hitung kuota booking maksimal (3 booking dikonfirmasi)
+// Load kamar secara instan (0ms) + sinkronisasi real-time Firestore & limit 3 booking
 
 import { db } from './firebase.js';
 import {
@@ -15,7 +15,63 @@ import {
   if (!grid) return;
 
   const DEFAULT_MAX_BOOKINGS = 3;
-  let loadedRooms = [];
+
+  // Data kamar awal (tersedia instan dalam 0ms tanpa menunggu jaringan)
+  const DEFAULT_ROOMS = [
+    {
+      id: 'kamar-deluxe',
+      name: 'Kamar Deluxe',
+      pricePerNight: 450000,
+      capacity: 2,
+      maxBookings: 3,
+      description: 'Kamar dengan nuansa hangat, pencahayaan alami, kasur King premium, AC, Wi-Fi super cepat, dan sarapan untuk 2 orang.',
+      facilities: ['AC', 'Wi-Fi Super Cepat', 'Sarapan', 'Smart TV 32"', 'K. Mandi & Air Panas', 'Perlengkapan Mandi'],
+      images: ['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=700&q=80&auto=format&fit=crop'],
+      isAvailable: true
+    },
+    {
+      id: 'kamar-superior',
+      name: 'Kamar Superior',
+      pricePerNight: 350000,
+      capacity: 2,
+      maxBookings: 3,
+      description: 'Pilihan hemat dan nyaman dengan kasur Queen, AC, Wi-Fi gratis, dan TV kabel untuk 2 tamu.',
+      facilities: ['AC', 'Wi-Fi Cepat', 'TV Kabel 32"', 'K. Mandi & Air Panas', 'Perlengkapan Mandi'],
+      images: ['https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=700&q=80&auto=format&fit=crop'],
+      isAvailable: true
+    },
+    {
+      id: 'suite-keluarga',
+      name: 'Suite Keluarga',
+      pricePerNight: 650000,
+      capacity: 4,
+      maxBookings: 3,
+      description: 'Ruangan luas untuk keluarga hingga 4 orang dengan 2 tempat tidur Queen, 2 AC, 2 kamar mandi dalam, dan living area.',
+      facilities: ['2 Unit AC', 'Wi-Fi Super Cepat', 'Sarapan 4 Orang', '2 TV Kabel 32"', '2 K. Mandi & Air Panas', 'Living Area'],
+      images: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=700&q=80&auto=format&fit=crop'],
+      isAvailable: true
+    },
+    {
+      id: 'kamar-standar',
+      name: 'Kamar Standar',
+      pricePerNight: 250000,
+      capacity: 1,
+      maxBookings: 3,
+      description: 'Kamar bersih dan tenang untuk perjalanan solo dengan Wi-Fi gratis dan 1 tempat tidur single.',
+      facilities: ['Kipas Angin Dinding', 'Wi-Fi Cepat', 'TV 24"', 'Kamar Mandi Bersama', 'Handuk & Sabun Mandi'],
+      images: ['https://images.unsplash.com/photo-1455587734955-081b22074882?w=700&q=80&auto=format&fit=crop'],
+      isAvailable: true
+    }
+  ];
+
+  // Coba ambil cache dari localStorage
+  let cachedRooms = null;
+  try {
+    const raw = localStorage.getItem('teduh_rooms_cache');
+    if (raw) cachedRooms = JSON.parse(raw);
+  } catch (e) {}
+
+  let loadedRooms = (Array.isArray(cachedRooms) && cachedRooms.length > 0) ? cachedRooms : DEFAULT_ROOMS;
   let confirmedBookings = [];
 
   // Helper untuk menentukan icon fasilitas
@@ -45,6 +101,8 @@ import {
 
   // Render grid seluruh kamar
   function renderAllRooms() {
+    if (loading) loading.style.display = 'none';
+
     if (loadedRooms.length === 0) {
       grid.innerHTML = '';
       emptyState?.classList.remove('d-none');
@@ -150,7 +208,7 @@ import {
 
   // Buka modal detail dinamis untuk kamar tertentu
   window.showRoomDetail = function (roomId) {
-    const room = loadedRooms.find(r => r.id === roomId);
+    const room = loadedRooms.find(r => r.id === roomId) || DEFAULT_ROOMS.find(r => r.id === roomId);
     if (!room) return;
 
     const modalContent = document.getElementById('roomDetailModalContent');
@@ -290,22 +348,24 @@ import {
     detailModal.show();
   };
 
-  // Muat data kamar & data booking dikonfirmasi secara real-time dari Firestore
-  try {
-    loading.style.display = 'block';
+  // 1. Render instan dalam 0ms
+  renderAllRooms();
 
-    // 1. Listen ke data kamar
+  // 2. Muat pembaruan real-time dari Firestore di latar belakang
+  try {
     const qRooms = query(collection(db, 'rooms'), orderBy('name'));
     onSnapshot(qRooms, (snapRooms) => {
-      loadedRooms = snapRooms.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      loading.style.display = 'none';
-      renderAllRooms();
+      if (!snapRooms.empty) {
+        loadedRooms = snapRooms.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderAllRooms();
+        try {
+          localStorage.setItem('teduh_rooms_cache', JSON.stringify(loadedRooms));
+        } catch (e) {}
+      }
     }, (err) => {
-      console.error('Gagal memuat kamar dari Firestore:', err);
-      loading.style.display = 'none';
+      console.warn('Firestore rooms stream error:', err);
     });
 
-    // 2. Listen ke data booking berstatus "confirmed"
     const qBookings = query(collection(db, 'bookings'));
     onSnapshot(qBookings, (snapBookings) => {
       confirmedBookings = snapBookings.docs
@@ -313,12 +373,11 @@ import {
         .filter(b => b.status === 'confirmed');
       renderAllRooms();
     }, (err) => {
-      console.warn('Gagal memuat status booking:', err);
+      console.warn('Firestore bookings stream error:', err);
     });
 
   } catch (err) {
-    console.error('Firestore init error:', err);
-    loading.style.display = 'none';
+    console.warn('Firestore init error:', err);
   }
 
 })();
