@@ -135,7 +135,7 @@ import {
             </p>
             <div class="d-flex gap-2 mt-auto pt-2" style="border-top:1px solid var(--cream-200);">
               ${bookingBtn}
-              <button type="button" class="btn btn-outline-primary btn-sm" onclick="window.showRoomDetail('${room.id}')">
+              <button type="button" class="btn btn-outline-primary btn-sm btn-room-detail" data-room-id="${room.id}" onclick="window.showRoomDetail('${room.id}')">
                 Detail Fasilitas
               </button>
             </div>
@@ -146,10 +146,14 @@ import {
 
   // Buka modal detail dinamis untuk kamar tertentu
   window.showRoomDetail = function (roomId) {
-    const room = loadedRooms.find(r => r.id === roomId);
+    if (!roomId) return;
+    const room = loadedRooms.find(r => r.id === roomId || (r.name && r.name.toLowerCase() === roomId.toLowerCase()));
     if (!room) return;
 
     const modalContent = document.getElementById('roomDetailModalContent');
+    const modalEl = document.getElementById('roomDetailModal');
+    if (!modalContent || !modalEl) return;
+
     const images = Array.isArray(room.images) && room.images.length > 0
       ? room.images
       : ['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80&auto=format&fit=crop'];
@@ -282,9 +286,46 @@ import {
       </div>
     `;
 
-    const detailModal = new bootstrap.Modal(document.getElementById('roomDetailModal'));
-    detailModal.show();
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+      const detailModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+      detailModal.show();
+    } else {
+      // Fallback jika bootstrap tertunda
+      setTimeout(() => {
+        if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+          const detailModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+          detailModal.show();
+        }
+      }, 150);
+    }
   };
+
+  // Event delegation untuk tombol detail fasilitas
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.btn-room-detail');
+    if (btn) {
+      const id = btn.getAttribute('data-room-id');
+      if (id) {
+        e.preventDefault();
+        window.showRoomDetail(id);
+      }
+    }
+  });
+
+  // Periksa parameter URL (misal: /ruangan?detail=kamar-id) untuk langsung buka modal
+  function checkUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetId = urlParams.get('detail') || urlParams.get('id') || urlParams.get('room');
+    if (targetId && loadedRooms.length > 0) {
+      const found = loadedRooms.find(r => 
+        r.id === targetId || 
+        (r.name && r.name.toLowerCase().includes(targetId.toLowerCase()))
+      );
+      if (found) {
+        window.showRoomDetail(found.id);
+      }
+    }
+  }
 
   // ── Hidrasi Instan dari Cache Lokal (0ms Render) ──
   try {
@@ -293,6 +334,7 @@ import {
       loadedRooms = JSON.parse(cachedRooms);
       isRoomsLoaded = true;
       renderAllRooms();
+      checkUrlParams();
     }
   } catch(e) {}
 
@@ -306,6 +348,7 @@ import {
         localStorage.setItem('teduh_rooms_cache', JSON.stringify(loadedRooms));
       } catch(e) {}
       renderAllRooms();
+      checkUrlParams();
     }, (err) => {
       console.error('Firestore rooms stream error:', err);
       isRoomsLoaded = true;
@@ -321,7 +364,7 @@ import {
         renderAllRooms();
       }
     }, (err) => {
-      console.warn('Firestore bookings stream error:', err);
+      console.warn('Firestore bookings stream notice:', err?.message || err);
     });
 
   } catch (err) {
