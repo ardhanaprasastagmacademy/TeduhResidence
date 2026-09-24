@@ -233,15 +233,7 @@
 <section class="section" style="padding-top:3rem;" id="rooms-section">
   <div class="container">
 
-    <!-- Loading state -->
-    <div id="rooms-loading" class="text-center py-5">
-      <div class="spinner-border" style="color:var(--teal-500);width:2.25rem;height:2.25rem;" role="status">
-        <span class="visually-hidden">Memuat kamar...</span>
-      </div>
-      <p class="text-ink-muted mt-3" style="font-size:0.95rem;">Memuat pilihan kamar...</p>
-    </div>
-
-    <!-- Grid kamar dinamis -->
+    <!-- Grid kamar dinamis (Langsung tampil dari database Firestore) -->
     <div class="row g-4" id="rooms-grid"></div>
 
     <!-- Empty state jika belum ada kamar di Firestore -->

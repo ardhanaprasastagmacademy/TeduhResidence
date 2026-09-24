@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── 1. KOLEKSI KAMAR (rooms) ─────────────────────────────────────────
+    // Publik boleh membaca data kamar (nama, harga, fasilitas, foto, status).
+    // Hanya Admin yang terautentikasi yang bisa menambah, mengedit, atau menghapus kamar.
+    match /rooms/{roomId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // ── 2. KOLEKSI BOOKING (bookings) ───────────────────────────────────
+    // Publik boleh membuat pesanan baru melalui form booking.
+    // Hanya Admin yang terautentikasi yang boleh membaca (melihat data tamu), mengubah status, atau menghapus booking.
+    match /bookings/{bookingId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null;
+    }
+
+    // ── 3. KOLEKSI GALERI (gallery) ─────────────────────────────────────
+    // Publik boleh melihat koleksi foto galeri.
+    // Hanya Admin yang terautentikasi yang boleh menambah, mengubah, atau menghapus foto galeri.
+    match /gallery/{galleryId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // ── 4. DEFAULT KEAMANAN ─────────────────────────────────────────────
+    // Tolak akses tulis untuk koleksi lain yang tidak terdaftar bagi pengguna yang belum login.
+    match /{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

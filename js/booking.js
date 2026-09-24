@@ -1,5 +1,5 @@
 // js/booking.js — Teduh Residence
-// Form booking cepat & responsif: instant load 0ms + real-time sync Firestore & limit 3 booking
+// Form booking 100% dinamis terintegrasi real-time langsung ke database Firestore (tanpa dummy/statis)
 
 import { db } from './firebase.js';
 import {
@@ -10,54 +10,6 @@ import {
   'use strict';
 
   const DEFAULT_MAX_BOOKINGS = 3;
-
-  // Data kamar awal (tersedia instan dalam 0ms tanpa menunggu jaringan)
-  const DEFAULT_ROOMS = [
-    {
-      id: 'kamar-deluxe',
-      name: 'Kamar Deluxe',
-      pricePerNight: 450000,
-      capacity: 2,
-      maxBookings: 3,
-      description: 'Kamar dengan nuansa hangat, pencahayaan alami, kasur King premium, AC, Wi-Fi super cepat, dan sarapan untuk 2 orang.',
-      facilities: ['AC', 'Wi-Fi Super Cepat', 'Sarapan', 'Smart TV 32"', 'K. Mandi & Air Panas'],
-      images: ['https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80&auto=format&fit=crop'],
-      isAvailable: true
-    },
-    {
-      id: 'kamar-superior',
-      name: 'Kamar Superior',
-      pricePerNight: 350000,
-      capacity: 2,
-      maxBookings: 3,
-      description: 'Pilihan hemat dan nyaman dengan kasur Queen, AC, Wi-Fi gratis, dan TV kabel untuk 2 tamu.',
-      facilities: ['AC', 'Wi-Fi Cepat', 'TV Kabel 32"', 'K. Mandi & Air Panas'],
-      images: ['https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80&auto=format&fit=crop'],
-      isAvailable: true
-    },
-    {
-      id: 'suite-keluarga',
-      name: 'Suite Keluarga',
-      pricePerNight: 650000,
-      capacity: 4,
-      maxBookings: 3,
-      description: 'Ruangan luas untuk keluarga hingga 4 orang dengan 2 tempat tidur Queen, 2 AC, 2 kamar mandi dalam, dan living area.',
-      facilities: ['2 Unit AC', 'Wi-Fi Super Cepat', 'Sarapan 4 Orang', '2 TV Kabel 32"', '2 K. Mandi & Air Panas'],
-      images: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80&auto=format&fit=crop'],
-      isAvailable: true
-    },
-    {
-      id: 'kamar-standar',
-      name: 'Kamar Standar',
-      pricePerNight: 250000,
-      capacity: 1,
-      maxBookings: 3,
-      description: 'Kamar bersih dan tenang untuk perjalanan solo dengan Wi-Fi gratis dan 1 tempat tidur single.',
-      facilities: ['Kipas Angin Dinding', 'Wi-Fi Cepat', 'TV 24"', 'Kamar Mandi Bersama'],
-      images: ['https://images.unsplash.com/photo-1455587734955-081b22074882?w=600&q=80&auto=format&fit=crop'],
-      isAvailable: true
-    }
-  ];
 
   // ── Elemen DOM ──────────────────────────────────────────────
   const form           = document.getElementById('booking-form');
@@ -86,19 +38,16 @@ import {
 
   if (!form) return;
 
-  // Coba ambil cache dari localStorage untuk kecepatan instan
-  let cachedRooms = null;
-  try {
-    const raw = localStorage.getItem('teduh_rooms_cache');
-    if (raw) cachedRooms = JSON.parse(raw);
-  } catch (e) {}
-
-  // State kamar
-  let roomsList = (Array.isArray(cachedRooms) && cachedRooms.length > 0) ? cachedRooms : DEFAULT_ROOMS;
+  // State kamar murni dari Database Firestore
+  let roomsList = [];
   let roomsData = {};
-  let confirmedBookings = [];
 
-  // Update mapping roomsData
+  // Set tanggal minimum (hari ini)
+  const today = new Date().toISOString().split('T')[0];
+  if (checkInEl) checkInEl.min = today;
+  if (checkOutEl) checkOutEl.min = today;
+
+  // ── Update mapping roomsData ────────────────────────────────
   function rebuildRoomsData() {
     roomsData = {};
     roomsList.forEach(r => {
@@ -106,23 +55,16 @@ import {
       if (r.id) roomsData[r.id] = r;
     });
   }
-  rebuildRoomsData();
 
-  // Set tanggal minimum (hari ini)
-  const today = new Date().toISOString().split('T')[0];
-  if (checkInEl) checkInEl.min = today;
-  if (checkOutEl) checkOutEl.min = today;
-
-  // ── Hitung jumlah booking terkonfirmasi untuk suatu kamar ────
-  function getConfirmedCount(room) {
-    return confirmedBookings.filter(b => 
-      (b.roomId && b.roomId === room.id) ||
-      (b.roomName && b.roomName.toLowerCase() === room.name.toLowerCase())
-    ).length;
-  }
-
-  // ── Isi opsi dropdown kamar & cek kuota ──────────────────────
+  // ── Isi opsi dropdown kamar dari database Firestore ─────────
   function populateRoomSelect() {
+    if (!roomSelect) return;
+
+    if (roomsList.length === 0) {
+      roomSelect.innerHTML = '<option value="" disabled selected>Belum ada kamar di database</option>';
+      return;
+    }
+
     const previousVal = roomSelect.value;
     const params = new URLSearchParams(window.location.search);
     const paramId   = params.get('id');
@@ -131,56 +73,44 @@ import {
     let optionsHtml = '<option value="" disabled selected>Pilih tipe kamar</option>';
 
     roomsList.forEach(r => {
-      const maxLimit = parseInt(r.maxBookings) || DEFAULT_MAX_BOOKINGS;
-      const confirmedCount = getConfirmedCount(r);
-      const isQuotaFull = confirmedCount >= maxLimit;
-      const isAvailable = r.isAvailable !== false && !isQuotaFull;
+      const isAvailable = r.isAvailable !== false;
 
-      if (isQuotaFull) {
-        optionsHtml += `
-          <option value="${r.name}" data-id="${r.id}" disabled style="color:#9A3B30;background:#fdf2f2;font-weight:500;">
-            ${r.name} — [PENUH / ${confirmedCount}/${maxLimit} Booking Dikonfirmasi]
-          </option>`;
-      } else if (r.isAvailable === false) {
+      if (!isAvailable) {
         optionsHtml += `
           <option value="${r.name}" data-id="${r.id}" disabled style="color:#888;">
             ${r.name} — [TIDAK TERSEDIA]
           </option>`;
       } else {
-        const quotaInfo = confirmedCount > 0 ? ` (${confirmedCount}/${maxLimit} Terisi)` : '';
         optionsHtml += `
           <option value="${r.name}" data-id="${r.id}" data-price="${r.pricePerNight}" data-capacity="${r.capacity}">
-            ${r.name} — Rp ${Number(r.pricePerNight || 0).toLocaleString('id-ID')}/malam${quotaInfo}
+            ${r.name} — Rp ${Number(r.pricePerNight || 0).toLocaleString('id-ID')}/malam
           </option>`;
       }
     });
 
     roomSelect.innerHTML = optionsHtml;
 
-    // Cek kecocokan kamar dari URL atau pilihan sebelumnya
+    // Cocokkan kamar dari URL query parameter atau pilihan sebelumnya
     let matchedRoom = null;
     if (paramId && roomsData[paramId]) {
       matchedRoom = roomsData[paramId];
     } else if (paramName) {
+      const searchKey = paramName.toLowerCase();
       matchedRoom = roomsList.find(r => 
-        r.name.toLowerCase() === paramName.toLowerCase() ||
-        r.name.toLowerCase().includes(paramName.toLowerCase()) ||
-        (r.id && r.id.toLowerCase() === paramName.toLowerCase())
+        r.name.toLowerCase() === searchKey ||
+        r.name.toLowerCase().includes(searchKey) ||
+        (r.id && r.id.toLowerCase() === searchKey)
       );
     } else if (previousVal && roomsData[previousVal]) {
       matchedRoom = roomsData[previousVal];
     }
 
     if (matchedRoom) {
-      const maxLimit = parseInt(matchedRoom.maxBookings) || DEFAULT_MAX_BOOKINGS;
-      const confirmedCount = getConfirmedCount(matchedRoom);
-      const isQuotaFull = confirmedCount >= maxLimit || matchedRoom.isAvailable === false;
-
-      if (isQuotaFull) {
+      if (matchedRoom.isAvailable === false) {
         if (roomFullAlert && roomFullText) {
           roomFullText.innerHTML = `
-            Kamar <strong>"${matchedRoom.name}"</strong> saat ini <strong>sudah penuh</strong> (kuota ${confirmedCount}/${maxLimit} booking telah dikonfirmasi).<br>
-            Silakan pilih tipe kamar lain yang masih tersedia di bawah ini.
+            Kamar <strong>"${matchedRoom.name}"</strong> saat ini <strong>tidak tersedia</strong>.<br>
+            Silakan pilih tipe kamar lain yang masih tersedia.
           `;
           roomFullAlert.classList.remove('d-none');
         }
@@ -244,9 +174,9 @@ import {
       const price = Number(room.pricePerNight || 0);
       const total = nights * price;
 
-      sPPN.textContent    = `Rp ${price.toLocaleString('id-ID')}`;
-      sNights.textContent = `${nights} malam`;
-      sTotal.textContent  = `Rp ${total.toLocaleString('id-ID')}`;
+      if (sPPN) sPPN.textContent    = `Rp ${price.toLocaleString('id-ID')}`;
+      if (sNights) sNights.textContent = `${nights} malam`;
+      if (sTotal) sTotal.textContent  = `Rp ${total.toLocaleString('id-ID')}`;
       summaryNights?.classList.remove('d-none');
     } else {
       summaryNights?.classList.add('d-none');
@@ -277,13 +207,13 @@ import {
 
   // ── Normalisasi nomor WhatsApp ──────────────────────────────
   function normalizePhone(raw) {
-    const digits = raw.replace(/\D/g, '');
+    const digits = (raw || '').replace(/\D/g, '');
     if (digits.startsWith('0')) return '62' + digits.slice(1);
     if (digits.startsWith('62')) return digits;
     return '62' + digits;
   }
 
-  // ── Validasi form & Cek Kuota Penuh ─────────────────────────
+  // ── Validasi form ───────────────────────────────────────────
   function validateForm() {
     let valid = true;
 
@@ -324,15 +254,10 @@ import {
 
     const selectedRoom = roomsData[room.value];
     if (selectedRoom) {
-      const maxLimit = parseInt(selectedRoom.maxBookings) || DEFAULT_MAX_BOOKINGS;
-      const confirmedCount = getConfirmedCount(selectedRoom);
-      
-      if (confirmedCount >= maxLimit) {
+      if (selectedRoom.isAvailable === false) {
         room.classList.add('is-invalid');
         if (roomFullAlert && roomFullText) {
-          roomFullText.innerHTML = `
-            Kamar <strong>"${selectedRoom.name}"</strong> sudah penuh (<strong>${confirmedCount}/${maxLimit} booking dikonfirmasi</strong>). Silakan pilih kamar lain.
-          `;
+          roomFullText.innerHTML = `Kamar <strong>"${selectedRoom.name}"</strong> sedang tidak tersedia. Silakan pilih kamar lain.`;
           roomFullAlert.classList.remove('d-none');
           roomFullAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
@@ -417,36 +342,21 @@ import {
     }
   });
 
-  // 1. Eksekusi instan 0ms pertama kali
-  populateRoomSelect();
-
-  // 2. Sinkronisasi latar belakang dengan Firestore
+  // ── Ambil Data Kamar Langsung dari Firestore (Cepat & Real-Time) ──
   try {
     const qRooms = query(collection(db, 'rooms'), orderBy('name'));
     onSnapshot(qRooms, (snap) => {
-      if (!snap.empty) {
-        roomsList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        rebuildRoomsData();
-        populateRoomSelect();
-        try {
-          localStorage.setItem('teduh_rooms_cache', JSON.stringify(roomsList));
-        } catch (e) {}
-      }
-    }, (err) => {
-      console.warn('Firestore rooms stream:', err);
-    });
-
-    const qBookings = query(collection(db, 'bookings'));
-    onSnapshot(qBookings, (snap) => {
-      confirmedBookings = snap.docs
-        .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(b => b.status === 'confirmed');
+      roomsList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      rebuildRoomsData();
       populateRoomSelect();
     }, (err) => {
-      console.warn('Firestore bookings stream:', err);
+      console.error('Firestore rooms error:', err);
+      if (roomSelect && roomsList.length === 0) {
+        roomSelect.innerHTML = '<option value="" disabled selected>Gagal memuat kamar dari database</option>';
+      }
     });
   } catch (e) {
-    console.warn('Firestore init background:', e);
+    console.error('Firestore init error:', e);
   }
 
 })();

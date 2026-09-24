@@ -380,69 +380,7 @@
       </div>
 
       <div class="row g-4" id="featured-rooms">
-        <!-- Diisi oleh JS dari Firestore / fallback statis -->
-        <div class="col-md-6 col-lg-4 reveal">
-          <div class="card h-100">
-            <div class="card-img-wrapper ratio-4x3">
-              <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80&auto=format&fit=crop"
-                alt="Kamar Deluxe Teduh Residence" loading="lazy" />
-              <span class="price-badge">Rp 450.000 / malam</span>
-            </div>
-            <div class="card-body">
-              <h4 class="mb-1">Kamar Deluxe</h4>
-              <p class="facilities-list mb-2">
-                <span>AC</span><span>Wi-Fi</span><span>Sarapan</span>
-              </p>
-              <p class="text-ink-muted mb-3" style="font-size:.875rem;">2 tamu</p>
-              <div class="d-flex gap-2">
-                <a href="booking.html?room=deluxe" class="btn btn-primary btn-sm">Booking</a>
-                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDeluxe">Detail Kamar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 reveal">
-          <div class="card h-100">
-            <div class="card-img-wrapper ratio-4x3">
-              <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=600&q=80&auto=format&fit=crop"
-                alt="Kamar Superior Teduh Residence" loading="lazy" />
-              <span class="price-badge">Rp 350.000 / malam</span>
-            </div>
-            <div class="card-body">
-              <h4 class="mb-1">Kamar Superior</h4>
-              <p class="facilities-list mb-2">
-                <span>AC</span><span>Wi-Fi</span><span>TV</span>
-              </p>
-              <p class="text-ink-muted mb-3" style="font-size:.875rem;">2 tamu</p>
-              <div class="d-flex gap-2">
-                <a href="booking.html?room=superior" class="btn btn-primary btn-sm">Booking</a>
-                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalSuperior">Detail Kamar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4 reveal">
-          <div class="card h-100">
-            <div class="card-img-wrapper ratio-4x3">
-              <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80&auto=format&fit=crop"
-                alt="Suite Keluarga Teduh Residence" loading="lazy" />
-              <span class="price-badge">Rp 650.000 / malam</span>
-            </div>
-            <div class="card-body">
-              <h4 class="mb-1">Suite Keluarga</h4>
-              <p class="facilities-list mb-2">
-                <span>AC</span><span>Wi-Fi</span><span>Sarapan</span>
-              </p>
-              <p class="text-ink-muted mb-3" style="font-size:.875rem;">4 tamu</p>
-              <div class="d-flex gap-2">
-                <a href="booking.html?room=suite" class="btn btn-primary btn-sm">Booking</a>
-                <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalSuite">Detail Kamar</button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <!-- Dimuat 100% secara dinamis dari database Firestore -->
       </div>
     </div>
   </section>
@@ -772,239 +710,6 @@
 
 
   <!-- ════════════════════════════════════════════════
-     MODAL POP-UP DETAIL KAMAR
-════════════════════════════════════════════════ -->
-
-  <!-- MODAL: KAMAR DELUXE -->
-  <div class="modal fade modal-teduh" id="modalDeluxe" tabindex="-1" aria-labelledby="modalDeluxeLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div>
-            <span class="eyebrow mb-1">Pilihan Populer</span>
-            <h4 class="modal-title mb-0" id="modalDeluxeLabel">Kamar Deluxe</h4>
-          </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-        </div>
-        <div class="modal-body">
-          <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=900&q=80&auto=format&fit=crop" alt="Kamar Deluxe Teduh Residence" class="room-modal-img" />
-          
-          <h5 class="modal-section-title">Deskripsi Kamar</h5>
-          <p class="modal-desc-text">
-            Kamar Deluxe dirancang untuk Anda yang menginginkan ketenangan ekstra dengan sentuhan kemewahan hangat, pencahayaan alami yang lembut, serta kasur King premium.
-          </p>
-
-          <h5 class="modal-section-title">Spesifikasi Kamar</h5>
-          <div class="room-spec-grid">
-            <div class="room-spec-box">
-              <i class="bi bi-aspect-ratio"></i>
-              <span class="spec-label">Luas Kamar</span>
-              <span class="spec-val">28 m²</span>
-            </div>
-            <div class="room-spec-box">
-              <i class="bi bi-people"></i>
-              <span class="spec-label">Kapasitas</span>
-              <span class="spec-val">2 Tamu</span>
-            </div>
-            <div class="room-spec-box">
-              <i class="bi bi-door-closed"></i>
-              <span class="spec-label">Tipe Kasur</span>
-              <span class="spec-val">1 King Bed</span>
-            </div>
-            <div class="room-spec-box">
-              <i class="bi bi-tree"></i>
-              <span class="spec-label">Pemandangan</span>
-              <span class="spec-val">Taman Asri</span>
-            </div>
-          </div>
-
-          <h5 class="modal-section-title">Fasilitas Lengkap</h5>
-          <div class="amenity-list-grid">
-            <div class="amenity-item"><i class="bi bi-snow"></i><span>AC & Kipas Angin</span></div>
-            <div class="amenity-item"><i class="bi bi-wifi"></i><span>Wi-Fi Super Cepat</span></div>
-            <div class="amenity-item"><i class="bi bi-cup-hot"></i><span>Sarapan 2 Orang</span></div>
-            <div class="amenity-item"><i class="bi bi-tv"></i><span>Smart TV 32"</span></div>
-            <div class="amenity-item"><i class="bi bi-droplet"></i><span>K. Mandi & Air Panas</span></div>
-            <div class="amenity-item"><i class="bi bi-box-seam"></i><span>Perlengkapan Mandi</span></div>
-            <div class="amenity-item"><i class="bi bi-archive"></i><span>Lemari & Hanger</span></div>
-            <div class="amenity-item"><i class="bi bi-laptop"></i><span>Meja Kerja & Stopkontak</span></div>
-          </div>
-
-          <div class="modal-policy-card">
-            <div class="d-flex align-items-center gap-2 mb-1">
-              <i class="bi bi-info-circle-fill"></i>
-              <strong>Informasi Menginap:</strong>
-            </div>
-            <div>Check-in: Mulai 14.00 WIB &middot; Check-out: Maks. 12.00 WIB &middot; Bebas Asap Rokok</div>
-          </div>
-        </div>
-        <div class="modal-footer d-flex justify-content-between align-items-center">
-          <div>
-            <span class="text-ink-muted" style="font-size:.75rem;display:block;">Harga per malam</span>
-            <span style="font-size:1.05rem;font-weight:700;color:var(--teal-900);">Rp 450.000</span>
-          </div>
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Tutup</button>
-            <a href="booking.html?room=deluxe&name=Kamar+Deluxe&price=450000" class="btn btn-primary btn-sm">Booking Kamar Ini</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: KAMAR SUPERIOR -->
-  <div class="modal fade modal-teduh" id="modalSuperior" tabindex="-1" aria-labelledby="modalSuperiorLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div>
-            <span class="eyebrow mb-1">Paling Favorit</span>
-            <h4 class="modal-title mb-0" id="modalSuperiorLabel">Kamar Superior</h4>
-          </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-        </div>
-        <div class="modal-body">
-          <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=900&q=80&auto=format&fit=crop" alt="Kamar Superior Teduh Residence" class="room-modal-img" />
-          
-          <h5 class="modal-section-title">Deskripsi Kamar</h5>
-          <p class="modal-desc-text">
-            Pilihan ideal yang nyaman dengan harga terjangkau. Bersih, tenang, dan tertata rapi untuk mendukung istirahat Anda setelah seharian beraktivitas.
-          </p>
-
-          <h5 class="modal-section-title">Spesifikasi Kamar</h5>
-          <div class="room-spec-grid">
-            <div class="room-spec-box">
-              <i class="bi bi-aspect-ratio"></i>
-              <span class="spec-label">Luas Kamar</span>
-              <span class="spec-val">22 m²</span>
-            </div>
-            <div class="room-spec-box">
-              <i class="bi bi-people"></i>
-              <span class="spec-label">Kapasitas</span>
-              <span class="spec-val">2 Tamu</span>
-            </div>
-            <div class="room-spec-box">
-              <i class="bi bi-door-closed"></i>
-              <span class="spec-label">Tipe Kasur</span>
-              <span class="spec-val">1 Queen Bed</span>
-            </div>
-            <div class="room-spec-box">
-              <i class="bi bi-flower1"></i>
-              <span class="spec-label">Pemandangan</span>
-              <span class="spec-val">Courtyard</span>
-            </div>
-          </div>
-
-          <h5 class="modal-section-title">Fasilitas Lengkap</h5>
-          <div class="amenity-list-grid">
-            <div class="amenity-item"><i class="bi bi-snow"></i><span>Pendingin Ruangan (AC)</span></div>
-            <div class="amenity-item"><i class="bi bi-wifi"></i><span>Wi-Fi Cepat (Gratis)</span></div>
-            <div class="amenity-item"><i class="bi bi-tv"></i><span>TV Kabel 32"</span></div>
-            <div class="amenity-item"><i class="bi bi-droplet"></i><span>K. Mandi & Air Panas</span></div>
-            <div class="amenity-item"><i class="bi bi-box-seam"></i><span>Perlengkapan Mandi</span></div>
-            <div class="amenity-item"><i class="bi bi-archive"></i><span>Lemari & Hanger</span></div>
-          </div>
-
-          <div class="modal-policy-card">
-            <div class="d-flex align-items-center gap-2 mb-1">
-              <i class="bi bi-info-circle-fill"></i>
-              <strong>Informasi Menginap:</strong>
-            </div>
-            <div>Check-in: Mulai 14.00 WIB &middot; Check-out: Maks. 12.00 WIB &middot; Bebas Asap Rokok</div>
-          </div>
-        </div>
-        <div class="modal-footer d-flex justify-content-between align-items-center">
-          <div>
-            <span class="text-ink-muted" style="font-size:.75rem;display:block;">Harga per malam</span>
-            <span style="font-size:1.05rem;font-weight:700;color:var(--teal-900);">Rp 350.000</span>
-          </div>
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Tutup</button>
-            <a href="booking.html?room=superior&name=Kamar+Superior&price=350000" class="btn btn-primary btn-sm">Booking Kamar Ini</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: SUITE KELUARGA -->
-  <div class="modal fade modal-teduh" id="modalSuite" tabindex="-1" aria-labelledby="modalSuiteLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <div>
-            <span class="eyebrow mb-1">Ruang Luas & Nyaman</span>
-            <h4 class="modal-title mb-0" id="modalSuiteLabel">Suite Keluarga</h4>
-          </div>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
-        </div>
-        <div class="modal-body">
-          <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=900&q=80&auto=format&fit=crop" alt="Suite Keluarga Teduh Residence" class="room-modal-img" />
-          
-          <h5 class="modal-section-title">Deskripsi Kamar</h5>
-          <p class="modal-desc-text">
-            Akomodasi terbaik untuk keluarga hingga 4 orang. Menghadirkan area duduk santai terpisah, 2 unit AC, serta 2 kamar mandi dalam untuk kenyamanan seluruh keluarga.
-          </p>
-
-          <h5 class="modal-section-title">Spesifikasi Kamar</h5>
-          <div class="room-spec-grid">
-            <div class="room-spec-box">
-              <i class="bi bi-aspect-ratio"></i>
-              <span class="spec-label">Luas Kamar</span>
-              <span class="spec-val">46 m²</span>
-            </div>
-            <div class="room-spec-box">
-              <i class="bi bi-people"></i>
-              <span class="spec-label">Kapasitas</span>
-              <span class="spec-val">4 Tamu</span>
-            </div>
-            <div class="room-spec-box">
-              <i class="bi bi-door-closed"></i>
-              <span class="spec-label">Tipe Kasur</span>
-              <span class="spec-val">2 Queen Beds</span>
-            </div>
-            <div class="room-spec-box">
-              <i class="bi bi-tree"></i>
-              <span class="spec-label">Pemandangan</span>
-              <span class="spec-val">Taman Depan</span>
-            </div>
-          </div>
-
-          <h5 class="modal-section-title">Fasilitas Lengkap</h5>
-          <div class="amenity-list-grid">
-            <div class="amenity-item"><i class="bi bi-snow"></i><span>2 Unit AC Independen</span></div>
-            <div class="amenity-item"><i class="bi bi-wifi"></i><span>Wi-Fi Super Cepat</span></div>
-            <div class="amenity-item"><i class="bi bi-cup-hot"></i><span>Sarapan 4 Orang</span></div>
-            <div class="amenity-item"><i class="bi bi-tv"></i><span>2 TV Kabel 32"</span></div>
-            <div class="amenity-item"><i class="bi bi-droplet"></i><span>2 K. Mandi & Air Panas</span></div>
-            <div class="amenity-item"><i class="bi bi-house-door"></i><span>Ruang Duduk / Living Area</span></div>
-            <div class="amenity-item"><i class="bi bi-archive"></i><span>Lemari Pakaian Besar</span></div>
-            <div class="amenity-item"><i class="bi bi-cup-straw"></i><span>Coffee & Tea Maker</span></div>
-          </div>
-
-          <div class="modal-policy-card">
-            <div class="d-flex align-items-center gap-2 mb-1">
-              <i class="bi bi-info-circle-fill"></i>
-              <strong>Informasi Menginap:</strong>
-            </div>
-            <div>Check-in: Mulai 14.00 WIB &middot; Check-out: Maks. 12.00 WIB &middot; Bebas Asap Rokok</div>
-          </div>
-        </div>
-        <div class="modal-footer d-flex justify-content-between align-items-center">
-          <div>
-            <span class="text-ink-muted" style="font-size:.75rem;display:block;">Harga per malam</span>
-            <span style="font-size:1.05rem;font-weight:700;color:var(--teal-900);">Rp 650.000</span>
-          </div>
-          <div class="d-flex gap-2">
-            <button type="button" class="btn btn-outline-primary btn-sm" data-bs-dismiss="modal">Tutup</button>
-            <a href="booking.html?room=suite&name=Suite+Keluarga&price=650000" class="btn btn-primary btn-sm">Booking Kamar Ini</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ════════════════════════════════════════════════
      SCRIPTS
 ════════════════════════════════════════════════ -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -1017,66 +722,52 @@
     if (featuredContainer) {
       try {
         let rooms = [];
-        let confirmedBookings = [];
 
         function renderFeatured() {
-          if (rooms.length === 0) return;
+          if (rooms.length === 0) {
+            featuredContainer.innerHTML = '';
+            return;
+          }
           const displayRooms = rooms.slice(0, 3);
           featuredContainer.innerHTML = displayRooms.map(r => {
-            const maxLimit = parseInt(r.maxBookings) || 3;
-            const confirmedCount = confirmedBookings.filter(b => 
-              (b.roomId && b.roomId === r.id) || 
-              (b.roomName && b.roomName.toLowerCase() === r.name.toLowerCase())
-            ).length;
-            const isQuotaFull = confirmedCount >= maxLimit || r.isAvailable === false;
+            const isAvailable = r.isAvailable !== false;
+            const mainImg = (Array.isArray(r.images) && r.images.length > 0) ? r.images[0] : 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600';
+            const facilitiesHtml = (Array.isArray(r.facilities) && r.facilities.length > 0)
+              ? r.facilities.slice(0, 3).map(f => `<span>${f}</span>`).join('')
+              : '<span>AC</span><span>Wi-Fi</span>';
 
             return `
-              <div class="col-md-6 col-lg-4 reveal">
+              <div class="col-md-6 col-lg-4 reveal revealed">
                 <div class="card h-100 shadow-sm">
-                  <div class="card-img-wrapper ratio-4x3 position-relative">
-                    <img src="${(r.images && r.images[0]) || 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600'}"
-                      alt="${r.name} Teduh Residence" loading="lazy" />
+                  <div class="card-img-wrapper ratio-4x3 position-relative overflow-hidden">
+                    <img src="${mainImg}" alt="${r.name} Teduh Residence" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
                     <span class="price-badge">Rp ${Number(r.pricePerNight || 0).toLocaleString('id-ID')} / malam</span>
-                    ${isQuotaFull ? `
-                      <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1 shadow-sm" style="font-size:0.75rem;">
-                        Penuh (${confirmedCount}/${maxLimit})
-                      </span>` : ''}
+                    ${!isAvailable ? `<span class="badge bg-secondary position-absolute top-0 end-0 m-2 px-2 py-1 shadow-sm" style="font-size:0.75rem;">Tidak Tersedia</span>` : ''}
                   </div>
-                  <div class="card-body d-flex flex-column">
-                    <h4 class="mb-1">${r.name}</h4>
-                    <p class="facilities-list mb-2">
-                      ${(Array.isArray(r.facilities) && r.facilities.length > 0) ? r.facilities.slice(0, 3).map(f => `<span>${f}</span>`).join('') : '<span>AC</span><span>Wi-Fi</span>'}
+                  <div class="card-body d-flex flex-column p-4">
+                    <h4 class="mb-1" style="font-size:1.15rem;font-weight:600;">${r.name}</h4>
+                    <p class="facilities-list my-2">
+                      ${facilitiesHtml}
                     </p>
-                    <p class="text-ink-muted mb-3" style="font-size:.875rem;">Maks. ${r.capacity || 2} tamu · ${isQuotaFull ? '<span class="text-danger fw-semibold">Penuh</span>' : `<span class="text-success">${confirmedCount}/${maxLimit} Terisi</span>`}</p>
-                    <div class="d-flex gap-2 mt-auto">
-                      ${isQuotaFull ? `
-                        <button class="btn btn-outline-primary btn-sm flex-grow-1" disabled style="opacity:0.65;">Penuh</button>
+                    <p class="text-ink-muted mb-3" style="font-size:.875rem;">Maks. ${r.capacity || 2} tamu</p>
+                    <div class="d-flex gap-2 mt-auto pt-2" style="border-top:1px solid var(--cream-200);">
+                      ${isAvailable ? `
+                        <a href="booking.html?id=${encodeURIComponent(r.id)}&name=${encodeURIComponent(r.name)}&price=${r.pricePerNight}" class="btn btn-primary btn-sm flex-grow-1 text-center">Booking</a>
                       ` : `
-                        <a href="booking.html?id=${r.id}&name=${encodeURIComponent(r.name)}&price=${r.pricePerNight}" class="btn btn-primary btn-sm flex-grow-1 text-center">Booking</a>
+                        <button class="btn btn-outline-primary btn-sm flex-grow-1" disabled style="opacity:0.65;">Tidak Tersedia</button>
                       `}
-                      <a href="ruangan.html" class="btn btn-outline-primary btn-sm">Detail</a>
+                      <a href="ruangan.html" class="btn btn-outline-primary btn-sm">Detail Kamar</a>
                     </div>
                   </div>
                 </div>
               </div>
             `;
           }).join('');
-
-          document.querySelectorAll('#featured-rooms .reveal:not(.revealed)').forEach((el, i) => {
-            el.style.transitionDelay = `${(i % 3) * 80}ms`;
-            setTimeout(() => el.classList.add('revealed'), 50);
-          });
         }
 
         const qRooms = query(collection(db, 'rooms'), orderBy('name'));
         onSnapshot(qRooms, (snap) => {
           rooms = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-          renderFeatured();
-        });
-
-        const qBookings = query(collection(db, 'bookings'));
-        onSnapshot(qBookings, (snap) => {
-          confirmedBookings = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(b => b.status === 'confirmed');
           renderFeatured();
         });
 
