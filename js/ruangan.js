@@ -55,12 +55,6 @@ import {
 
     emptyState?.classList.add('d-none');
     grid.innerHTML = loadedRooms.map(room => renderRoomCard(room)).join('');
-
-    // Reveal animation
-    document.querySelectorAll('.reveal:not(.revealed)').forEach((el, i) => {
-      el.style.transitionDelay = `${(i % 3) * 80}ms`;
-      setTimeout(() => el.classList.add('revealed'), 50);
-    });
   }
 
   // Render satu card kamar di grid
@@ -112,7 +106,7 @@ import {
     }
 
     return `
-      <div class="col-md-6 col-lg-4 reveal">
+      <div class="col-md-6 col-lg-4">
         <div class="card h-100 shadow-sm" style="transition:transform .25s ease, box-shadow .25s ease;">
           <div class="card-img-wrapper ratio-4x3 position-relative overflow-hidden">
             <img src="${mainImg}" alt="${room.name} Teduh Residence" loading="lazy" style="width:100%;height:100%;object-fit:cover;" />
@@ -292,12 +286,25 @@ import {
     detailModal.show();
   };
 
+  // ── Hidrasi Instan dari Cache Lokal (0ms Render) ──
+  try {
+    const cachedRooms = localStorage.getItem('teduh_rooms_cache');
+    if (cachedRooms) {
+      loadedRooms = JSON.parse(cachedRooms);
+      isRoomsLoaded = true;
+      renderAllRooms();
+    }
+  } catch(e) {}
+
   // Muat data real-time dari Firestore Database
   try {
     const qRooms = query(collection(db, 'rooms'), orderBy('name'));
     onSnapshot(qRooms, (snapRooms) => {
       isRoomsLoaded = true;
       loadedRooms = snapRooms.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      try {
+        localStorage.setItem('teduh_rooms_cache', JSON.stringify(loadedRooms));
+      } catch(e) {}
       renderAllRooms();
     }, (err) => {
       console.error('Firestore rooms stream error:', err);

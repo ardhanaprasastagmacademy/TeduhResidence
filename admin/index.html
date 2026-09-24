@@ -261,9 +261,21 @@
 
     // ── Load dari Firestore ──
     function loadBookings() {
+      // Hidrasi instan dari cache lokal (0ms render)
+      try {
+        const cached = localStorage.getItem('teduh_bookings_cache');
+        if (cached) {
+          allBookings = JSON.parse(cached);
+          renderTable();
+        }
+      } catch(e) {}
+
       const q = query(collection(db, 'bookings'), orderBy('createdAt', 'desc'));
       onSnapshot(q, (snap) => {
         allBookings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        try {
+          localStorage.setItem('teduh_bookings_cache', JSON.stringify(allBookings));
+        } catch(e) {}
         renderTable();
       });
     }

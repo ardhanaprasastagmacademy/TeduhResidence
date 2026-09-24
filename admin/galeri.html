@@ -189,9 +189,21 @@
 
   // ── Load Gallery from Firestore ──
   function loadGallery() {
+    // Hidrasi instan dari cache lokal (0ms render)
+    try {
+      const cached = localStorage.getItem('teduh_gallery_cache');
+      if (cached) {
+        allPhotos = JSON.parse(cached);
+        renderGallery();
+      }
+    } catch(e) {}
+
     const qGallery = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
     onSnapshot(qGallery, (snap) => {
       allPhotos = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      try {
+        localStorage.setItem('teduh_gallery_cache', JSON.stringify(allPhotos));
+      } catch(e) {}
       renderGallery();
     }, (err) => {
       console.error('Gallery stream error:', err);

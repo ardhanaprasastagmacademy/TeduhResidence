@@ -189,9 +189,21 @@
 
   // ── Load rooms & bookings ──
   function loadRooms() {
+    // Hidrasi instan dari cache lokal (0ms render)
+    try {
+      const cached = localStorage.getItem('teduh_rooms_cache');
+      if (cached) {
+        allRooms = JSON.parse(cached);
+        renderRooms();
+      }
+    } catch(e) {}
+
     const qRooms = query(collection(db, 'rooms'), orderBy('name'));
     onSnapshot(qRooms, (snap) => {
       allRooms = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      try {
+        localStorage.setItem('teduh_rooms_cache', JSON.stringify(allRooms));
+      } catch(e) {}
       renderRooms();
     });
 

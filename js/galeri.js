@@ -32,7 +32,7 @@ import {
 
     emptyState?.classList.add('d-none');
     grid.innerHTML = filtered.map(item => `
-      <div class="masonry-item reveal revealed" data-category="${item.category || 'galeri'}">
+      <div class="masonry-item" data-category="${item.category || 'galeri'}">
         <img src="${item.imageUrl}" alt="${item.title || 'Foto Galeri Teduh Residence'}" loading="lazy" />
         <div class="masonry-overlay p-3 d-flex flex-column justify-content-end position-absolute inset-0"
              style="background: linear-gradient(to top, rgba(14, 59, 58, 0.75) 0%, transparent 60%); opacity: 0; transition: opacity .3s ease; inset: 0;">
@@ -70,12 +70,24 @@ import {
     });
   });
 
+  // ── Hidrasi Instan dari Cache Lokal (0ms Render) ──
+  try {
+    const cachedGallery = localStorage.getItem('teduh_gallery_cache');
+    if (cachedGallery) {
+      allGalleryPhotos = JSON.parse(cachedGallery);
+      renderGallery();
+    }
+  } catch(e) {}
+
   // ── Ambil Data Galeri Real-Time dari Firestore ──
   try {
     const qGallery = query(collection(db, 'gallery'), orderBy('createdAt', 'desc'));
     onSnapshot(qGallery, (snap) => {
       if (!snap.empty) {
         allGalleryPhotos = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        try {
+          localStorage.setItem('teduh_gallery_cache', JSON.stringify(allGalleryPhotos));
+        } catch(e) {}
         renderGallery();
       } else {
         // Jika koleksi gallery khusus masih kosong, otomatis tampilkan foto dari koleksi rooms

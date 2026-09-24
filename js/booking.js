@@ -342,11 +342,24 @@ import {
     }
   });
 
+  // ── Hidrasi Instan dari Cache Lokal (0ms Render Dropdown & Kamar) ──
+  try {
+    const cached = localStorage.getItem('teduh_rooms_cache');
+    if (cached) {
+      roomsList = JSON.parse(cached);
+      rebuildRoomsData();
+      populateRoomSelect();
+    }
+  } catch(e) {}
+
   // ── Ambil Data Kamar Langsung dari Firestore (Cepat & Real-Time) ──
   try {
     const qRooms = query(collection(db, 'rooms'), orderBy('name'));
     onSnapshot(qRooms, (snap) => {
       roomsList = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      try {
+        localStorage.setItem('teduh_rooms_cache', JSON.stringify(roomsList));
+      } catch(e) {}
       rebuildRoomsData();
       populateRoomSelect();
     }, (err) => {
