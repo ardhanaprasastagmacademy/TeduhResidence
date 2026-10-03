@@ -65,6 +65,7 @@ import {
 
     const maxLimit = parseInt(room.maxBookings) || DEFAULT_MAX_BOOKINGS;
     const confirmedCount = getConfirmedCount(room);
+    const availableCount = Math.max(0, maxLimit - confirmedCount);
     const isQuotaFull = confirmedCount >= maxLimit;
     const isAvailable = room.isAvailable !== false && !isQuotaFull;
 
@@ -80,10 +81,10 @@ import {
     if (isQuotaFull) {
       statusBadge = `
         <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-2 py-1 shadow-sm" style="font-size:0.75rem;border-radius:var(--radius-sm);">
-          <i class="bi bi-x-circle me-1"></i>Penuh (${confirmedCount}/${maxLimit} Booking)
+          <i class="bi bi-x-circle me-1"></i>Kamar Penuh
         </span>`;
       bookingBtn = `
-        <button class="btn btn-outline-primary btn-sm flex-grow-1" disabled style="opacity:0.65;cursor:not-allowed;" title="Kamar sudah mencapai kuota maksimal">
+        <button class="btn btn-outline-primary btn-sm flex-grow-1" disabled style="opacity:0.65;cursor:not-allowed;" title="Kamar sudah penuh">
           Kamar Penuh
         </button>`;
     } else if (room.isAvailable === false) {
@@ -96,10 +97,15 @@ import {
           Tidak Tersedia
         </button>`;
     } else {
-      if (confirmedCount > 0) {
+      if (availableCount <= 1) {
         statusBadge = `
           <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2 px-2 py-1 shadow-sm" style="font-size:0.72rem;border-radius:var(--radius-sm);">
-            ${confirmedCount}/${maxLimit} Terisi
+            <i class="bi bi-fire me-1"></i>Sisa ${availableCount} Kamar
+          </span>`;
+      } else {
+        statusBadge = `
+          <span class="badge bg-success position-absolute top-0 end-0 m-2 px-2 py-1 shadow-sm" style="font-size:0.72rem;border-radius:var(--radius-sm);">
+            <i class="bi bi-check-circle me-1"></i>Tersedia ${availableCount} Kamar
           </span>`;
       }
       bookingBtn = `<a href="${bookingUrl}" class="btn btn-primary btn-sm flex-grow-1 text-center">Booking</a>`;
@@ -126,8 +132,8 @@ import {
               <span class="text-ink-muted" style="font-size:.85rem;">
                 <i class="bi bi-people me-1 text-primary"></i>Maks. ${room.capacity || 2} tamu
               </span>
-              <span class="badge ${isQuotaFull ? 'bg-danger-subtle text-danger border border-danger-subtle' : 'bg-success-subtle text-success border border-success-subtle'}" style="font-size:0.72rem;">
-                ${isQuotaFull ? `Penuh (${confirmedCount}/${maxLimit})` : `Tersedia (${confirmedCount}/${maxLimit} terisi)`}
+              <span class="badge ${isQuotaFull ? 'bg-danger-subtle text-danger border border-danger-subtle' : (availableCount <= 1 ? 'bg-warning-subtle text-warning-emphasis border border-warning-subtle' : 'bg-success-subtle text-success border border-success-subtle')}" style="font-size:0.72rem;">
+                ${isQuotaFull ? 'Kamar Penuh' : `Tersedia ${availableCount} Kamar`}
               </span>
             </div>
             <p class="text-ink-muted mb-4" style="font-size:.875rem;flex-grow:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
@@ -160,6 +166,7 @@ import {
 
     const maxLimit = parseInt(room.maxBookings) || DEFAULT_MAX_BOOKINGS;
     const confirmedCount = getConfirmedCount(room);
+    const availableCount = Math.max(0, maxLimit - confirmedCount);
     const isQuotaFull = confirmedCount >= maxLimit;
     const isAvailable = room.isAvailable !== false && !isQuotaFull;
     const bookingUrl = `booking.html?id=${encodeURIComponent(room.id)}&name=${encodeURIComponent(room.name)}&price=${room.pricePerNight}`;
@@ -223,7 +230,7 @@ import {
             <i class="bi bi-exclamation-triangle-fill fs-4 text-danger flex-shrink-0"></i>
             <div>
               <strong class="d-block mb-1">Kamar Sudah Penuh</strong>
-              <div style="font-size:0.875rem;">Kamar ini sudah mencapai batas kuota maksimal (<strong>${confirmedCount}/${maxLimit} booking dikonfirmasi</strong>). Silakan pilih tipe kamar lain yang masih tersedia.</div>
+              <div style="font-size:0.875rem;">Semua kamar untuk tipe ini sudah terisi penuh (<strong>0 Kamar Tersedia</strong>). Silakan pilih tipe kamar lain yang masih tersedia.</div>
             </div>
           </div>
         ` : ''}
@@ -233,7 +240,7 @@ import {
           ${room.description || 'Kamar dirancang untuk memberikan kenyamanan optimal dengan suasana tenang, bersih, dan fasilitas lengkap untuk istirahat Anda di Kota Malang.'}
         </p>
 
-        <h5 class="modal-section-title">Spesifikasi & Status Kuota</h5>
+        <h5 class="modal-section-title">Spesifikasi & Ketersediaan</h5>
         <div class="room-spec-grid mb-4">
           <div class="room-spec-box">
             <i class="bi bi-people"></i>
@@ -251,9 +258,9 @@ import {
             <span class="spec-val ${isQuotaFull ? 'text-danger fw-bold' : 'text-success'}">${isQuotaFull ? 'Penuh' : (room.isAvailable !== false ? 'Tersedia' : 'Nonaktif')}</span>
           </div>
           <div class="room-spec-box">
-            <i class="bi bi-calendar-check"></i>
-            <span class="spec-label">Kuota Terisi</span>
-            <span class="spec-val ${isQuotaFull ? 'text-danger fw-bold' : ''}">${confirmedCount} / ${maxLimit} Booking</span>
+            <i class="bi bi-check2-circle"></i>
+            <span class="spec-label">Ketersediaan</span>
+            <span class="spec-val ${isQuotaFull ? 'text-danger fw-bold' : 'text-success fw-bold'}">${isQuotaFull ? '0 Kamar Tersedia' : `Tersedia ${availableCount} Kamar`}</span>
           </div>
         </div>
 
@@ -267,7 +274,7 @@ import {
             <i class="bi bi-info-circle-fill text-primary"></i>
             <strong>Informasi Menginap:</strong>
           </div>
-          <div>Check-in: Mulai 14.00 WIB &middot; Check-out: Maks. 12.00 WIB &middot; Bebas Asap Rokok &middot; Maksimal 3 booking per tipe kamar</div>
+          <div>Check-in: Mulai 14.00 WIB &middot; Check-out: Maks. 12.00 WIB &middot; Bebas Asap Rokok &middot; Konfirmasi instan via WhatsApp</div>
         </div>
       </div>
       <div class="modal-footer d-flex justify-content-between align-items-center">

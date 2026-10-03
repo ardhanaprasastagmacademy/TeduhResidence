@@ -23,8 +23,8 @@
     </a>
     <nav class="flex-grow-1">
       <a href="index.html" class="nav-link active"><i class="bi bi-calendar-check"></i>Booking</a>
-      <a href="kamar.html" class="nav-link"><i class="bi bi-door-open"></i>Kamar</a>
-      <a href="galeri.html" class="nav-link"><i class="bi bi-images"></i>Galeri</a>
+      <a href="admin/kamar.html" class="nav-link"><i class="bi bi-door-open"></i>Kamar</a>
+      <a href="admin/galeri.html" class="nav-link"><i class="bi bi-images"></i>Galeri</a>
     </nav>
     <button id="logout-btn" class="nav-link text-start border-0 bg-transparent w-100"
       style="color:var(--teal-300);font-size:.9rem;padding:.6rem .75rem;cursor:pointer;">
@@ -42,7 +42,7 @@
         <p class="mb-0 text-ink-muted" style="font-size:.8rem;" id="admin-email-display"></p>
       </div>
       <div class="d-flex gap-2">
-        <a href="kamar.html" class="btn btn-outline-primary btn-sm d-none d-lg-inline-flex"><i
+        <a href="admin/kamar.html" class="btn btn-outline-primary btn-sm d-none d-lg-inline-flex"><i
             class="bi bi-door-open me-1"></i>Kelola Kamar</a>
         <button id="logout-mobile" class="btn btn-outline-primary btn-sm d-lg-none"><i
             class="bi bi-box-arrow-left"></i></button>
@@ -268,14 +268,14 @@
           allBookings = JSON.parse(cached);
           renderTable();
         }
-      } catch(e) {}
+      } catch (e) { }
 
       const q = query(collection(db, 'bookings'), orderBy('createdAt', 'desc'));
       onSnapshot(q, (snap) => {
         allBookings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
         try {
           localStorage.setItem('teduh_bookings_cache', JSON.stringify(allBookings));
-        } catch(e) {}
+        } catch (e) { }
         renderTable();
       });
     }
